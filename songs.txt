@@ -2,11 +2,23 @@ ARTIST: Three Days Grace
 ALBUM: Human
 IMAGE: https://i.ibb.co/kgS1djYn/IMG-7778.png
 SONG: Human race - https://dl.dropboxusercontent.com/scl/fi/myfw4vujql27z8shaqh9f/Dominate.mp3?rlkey=bzbgg61e8x1pb9pbttk1pqr7l&st=8acm3td3
+SONG: Painkiller - https://dl.dropboxusercontent.com/scl/fi/95og45zdv2dn5hraszmnq/Apologies.mp3?rlkey=9rmgwkybdsho4ckwolkqkxpip&st=vc3nn5nt
+SONG: Fallen angel - https://dl.dropboxusercontent.com/scl/fi/8s9jcy7rwtcb3fn5rltbd/Mayday.mp3?rlkey=3g8d5toafe5qe0141mq85em2e&st=0sbyl4so
 
 ARTIST: Three Days Grace
 ALBUM: Alienation
 IMAGE: https://i.ibb.co/jPpmsv43/IMG-7788.gif
 SONG: Dominate - https://dl.dropboxusercontent.com/scl/fi/myfw4vujql27z8shaqh9f/Dominate.mp3?rlkey=bzbgg61e8x1pb9pbttk1pqr7l&st=8acm3td3
+SONG: Apologies - https://dl.dropboxusercontent.com/scl/fi/95og45zdv2dn5hraszmnq/Apologies.mp3?rlkey=9rmgwkybdsho4ckwolkqkxpip&st=vc3nn5nt
+SONG: Mayday - https://dl.dropboxusercontent.com/scl/fi/8s9jcy7rwtcb3fn5rltbd/Mayday.mp3?rlkey=3g8d5toafe5qe0141mq85em2e&st=0sbyl4so
+SONG: Kill Me Fast - https://dl.dropboxusercontent.com/scl/fi/7cxpnbrh22lkj7l3t9jch/Kill-Me-Fast.mp3?rlkey=uoobm2bho45hroy2k5wic4ani&st=fd25ka3r
+SONG: In Waves - https://dl.dropboxusercontent.com/scl/fi/0mlhk8ww7wcdxbzi51nba/In-Waves.mp3?rlkey=krdvzewzctulpogb3kcw9trk7&st=6yohldmg
+SONG: Alienation - https://dl.dropboxusercontent.com/scl/fi/5tgd5u491y9tppdo5nnf1/Alienation.mp3?rlkey=cie57og99aeroi5on9dauw0l2&st=4x9cikj9
+SONG: Never Ordinary - https://dl.dropboxusercontent.com/scl/fi/kgbuicc7y136dffaltav5/Never-Ordinary.mp3?rlkey=5lj33zv9jyd300vhyjxiswt5l&st=dopboyfc
+SONG: Deathwish - https://dl.dropboxusercontent.com/scl/fi/11f5r9kvopfmqkvkjz7l5/Deathwish.mp3?rlkey=osovnw8yz739yu1bjjjo42hiu&st=7lb8a45p
+SONG: Don't Wanna Go Home Tonight - https://dl.dropboxusercontent.com/scl/fi/ujwmd84lzm7q50ytek8rz/Don-t-Wanna-Go-Home-Tonight.mp3?rlkey=d8k3pzwxuvsvmu2a9qalswze2&st=zyw3k50e
+SONG: The Power - https://dl.dropboxusercontent.com/scl/fi/vik5c14g3vunznw17jgo4/The-Power.mp3?rlkey=8jwn27qvvno0snc3xbvoucy8d&st=onscnuip
+SONG: Another Relapse - https://dl.dropboxusercontent.com/scl/fi/h81ot4vljiw7m8437tcan/In-Cold-Blood.mp3?rlkey=31esed55a1lxze6048z17i1vu&st=4ubkx51u
 
 ARTIST: Eminem
 ALBUM: The Eminem Show
@@ -16,4 +28,17 @@ SONG: Without Me - https://example.com/without-me.mp3
 ARTIST: Hollywood Undead
 ALBUM: Swan Songs
 IMAGE: https://i.ibb.co/JFsxnD2F/IMG-7777.png
-SONG: Undead - https://example.com/undead.mp3
+SONG: Black Dahlia - https://dl.dropboxusercontent.com/scl/fi/qyme3txi7bftd0pgkt9a8/Hollywood_Undead_-_Black_Dahilia_70452692.mp3?rlkey=mfffozlg7hsjn4yv25sw2nq0b&st=wotoinr5
+SONG: California - https://dl.dropboxusercontent.com/scl/fi/5dqisi7iwrzt3te2706dc/Hollywood_Undead_-_California_47958631.mp3?rlkey=fzvry8c3kcp6nmch00t5f09te&st=54hv98g3
+SONG: Circles - https://dl.dropboxusercontent.com/scl/fi/c4qbmd174zsmh2svawbg3/Hollywood_Undead_-_Circles_47958655.mp3?rlkey=jryn5o2foolyra6tdt7qpi6po&st=36b6vfmc
+SONG: Dead Bite - https://dl.dropboxusercontent.com/scl/fi/6liinf1rm14bth5mc1dxc/Hollywood_Undead_-_Dead_Bite_47894449.mp3?rlkey=cz4c9g6adhm46mwbxkcam411v&st=k9ddm72f
+SONG: Evil - https://dl.dropboxusercontent.com/scl/fi/ickhwx9s8wvex0xcab04b/Hollywood_Undead_-_Evil_75637598.mp3?rlkey=jcotbazs4224pqdlrmolskrpi&st=46ejjjkt
+SONG: Hollywood Forever - https://dl.dropboxusercontent.com/scl/fi/b8dcn68yp8lzzm789eh67/Hollywood_Undead_-_Hollywood_Forever_79531361.mp3?rlkey=r257stg8nqus1fs2h7xvbm7kx&st=01mqfqb7
+SONG: No. 5 - https://dl.dropboxusercontent.com/scl/fi/youegcg20jvi4dmdq82s4/Hollywood_Undead_-_No5_70294969.mp3?rlkey=rlrpm4ajau7b0xe5wbfersy17&st=2nvflq57
+SONG: Pain - https://dl.dropboxusercontent.com/scl/fi/pnn1v8y9le2o6yjyzbwc8/Hollywood_Undead_-_Pain_47958641.mp3?rlkey=3ise3u9qnn4qmeerdijvpq94q&st=f6eaal2x
+SONG: Sell Your Soul - https://dl.dropboxusercontent.com/scl/fi/p9chs6jhkmo5ow9vgm4lb/Hollywood_Undead_-_Sell_Your_Soul_47958615.mp3?rlkey=bzx5hrd8rrozpl09l0zu1snid&st=a7htxw9i
+SONG: Paradise Lost - https://dl.dropboxusercontent.com/scl/fi/7dzkactf24bwxjeoitgep/Hollywood_Undead_-_Paradise_Lost_47958640-2.mp3?rlkey=qxcvewjozc0bzem4w93v23u8j&st=tw06z1dq
+SONG: The Diary - https://dl.dropboxusercontent.com/scl/fi/pyjbocs7dauwcxb2e80mr/Hollywood_Undead_-_The_Diary_47958636.mp3?rlkey=qcftw8ece1sgse5leduw60mhc&st=hgmtmqiz
+SONG: The Loss - https://dl.dropboxusercontent.com/scl/fi/5wjc3vpuhc3h5ft5ltbcw/Hollywood_Undead_-_The_Loss_47958649.mp3?rlkey=w36n18wpzgc2ub4x3n3vwut06&st=bvf2govf
+SONG: We Are - https://dl.dropboxusercontent.com/scl/fi/1n5xhxvqla8uhvlcvoxit/Hollywood_Undead_-_We_Are_47894453.mp3?rlkey=obafffbtjioiyuaokrtlbhdv1&st=04mhv6c3
+SONG: Young - https://dl.dropboxusercontent.com/scl/fi/ztnur5p6qxy9r9pi3uiek/Hollywood_Undead_-_Young_47958622.mp3?rlkey=at8bgmhbz1nmqjzg45clm6ago&st=l8ghmej7
