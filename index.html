@@ -2,9 +2,10 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>STATION</title>
     <style>
+        /* Базовые сбросы и запреты */
         * {
             margin: 0;
             padding: 0;
@@ -14,6 +15,19 @@
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
+        }
+        
+        /* Скрываем все скроллбары */
+        ::-webkit-scrollbar {
+            display: none;
+            width: 0;
+            height: 0;
+            background: transparent;
+        }
+        
+        * {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
         
         body {
@@ -31,9 +45,14 @@
         .radio-subtitle {
             font-size: 24px;
             color: white;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             font-weight: 600;
             align-self: flex-start;
+        }
+        
+        /* Секция радио */
+        .radio-section {
+            margin-bottom: 40px;
         }
         
         .player-center {
@@ -41,7 +60,6 @@
             align-items: flex-start;
             gap: 20px;
             width: 100%;
-            margin-bottom: 40px;
         }
         
         .cover-image {
@@ -84,7 +102,7 @@
         .playlist-subtitle {
             font-size: 24px;
             color: white;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             font-weight: 600;
         }
         
@@ -94,16 +112,6 @@
             align-items: center;
             justify-content: center;
             padding: 40px 20px;
-            background: rgba(26, 26, 26, 0.3);
-            border-radius: 12px;
-            border: 2px dashed #333;
-            min-height: 120px;
-            transition: all 0.3s ease;
-        }
-        
-        .playlist-empty.drag-over {
-            background: rgba(189, 78, 54, 0.2);
-            border-color: #BD4E36;
         }
         
         .playlist-text {
@@ -114,157 +122,50 @@
         
         /* Секция рекомендаций */
         .recommendations-section {
-            margin-top: 30px;
+            margin-top: 40px;
         }
         
-        .recommendations-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            cursor: pointer;
-        }
-        
-        .recommendations-title {
+        .recommendations-subtitle {
             font-size: 24px;
             color: white;
+            margin-bottom: 20px;
             font-weight: 600;
         }
         
-        .chevron {
-            width: 20px;
-            height: 20px;
-            opacity: 0.7;
-            transition: transform 0.3s ease;
-        }
-        
-        .chevron.down {
-            transform: rotate(90deg);
-        }
-        
-        .recommendations-container {
-            display: none;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        
-        .recommendations-container.active {
-            display: block;
-        }
-        
-        .songs-grid {
+        .albums-scroll {
             display: flex;
-            flex-direction: column;
-            gap: 10px;
+            gap: 20px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            scrollbar-width: none;
         }
         
-        .song-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 12px;
-            background: rgba(26, 26, 26, 0.6);
-            border-radius: 12px;
-            transition: all 0.2s ease;
-            position: relative;
-            cursor: grab;
+        .album-card {
+            flex: 0 0 auto;
+            width: 140px;
+            cursor: pointer;
         }
         
-        .song-item:active {
-            cursor: grabbing;
-        }
-        
-        .song-item.dragging {
-            opacity: 0.8;
-            transform: scale(0.95);
-            z-index: 1000;
-        }
-        
-        .song-item.favorite {
-            order: -1;
-            background: rgba(189, 78, 54, 0.1);
-            border: 1px solid rgba(189, 78, 54, 0.3);
-        }
-        
-        .song-cover {
-            width: 50px;
-            height: 50px;
-            border-radius: 8px;
+        .album-cover {
+            width: 140px;
+            height: 140px;
+            background: #1a1a1a;
+            border-radius: 18px;
+            margin-bottom: 12px;
             background-size: cover;
             background-position: center;
-            flex-shrink: 0;
         }
         
-        .song-name {
-            flex: 1;
+        .album-title {
+            font-weight: 600;
+            margin-bottom: 4px;
             font-size: 14px;
-            font-weight: 500;
+            line-height: 1.3;
         }
         
-        .heart-btn {
-            background: none;
-            border: none;
-            color: #666;
-            cursor: pointer;
-            padding: 5px;
-            transition: all 0.3s ease;
-            flex-shrink: 0;
-        }
-        
-        .heart-btn.liked {
-            color: #e74c3c;
-        }
-        
-        .heart-icon {
-            width: 20px;
-            height: 20px;
-        }
-        
-        .load-more {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            background: none;
-            border: 1px solid #333;
+        .album-artist {
+            font-size: 12px;
             color: #aaa;
-            padding: 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 15px;
-            transition: all 0.2s ease;
-            font-family: 'Montserrat', sans-serif;
-        }
-        
-        .load-more:hover {
-            background: #1a1a1a;
-        }
-        
-        .reload-icon {
-            width: 16px;
-            height: 16px;
-            transition: transform 0.3s ease;
-        }
-        
-        .load-more.loading .reload-icon {
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
-        @keyframes vibrate {
-            0% { transform: translateX(0); }
-            25% { transform: translateX(-2px); }
-            50% { transform: translateX(2px); }
-            75% { transform: translateX(-2px); }
-            100% { transform: translateX(0); }
-        }
-        
-        .vibrate {
-            animation: vibrate 0.3s ease;
         }
         
         @media (max-width: 480px) {
@@ -281,13 +182,13 @@
                 font-size: 13px;
             }
             
-            .song-cover {
-                width: 40px;
-                height: 40px;
+            .album-card {
+                width: 120px;
             }
             
-            .song-name {
-                font-size: 13px;
+            .album-cover {
+                width: 120px;
+                height: 120px;
             }
         }
     </style>
@@ -296,54 +197,60 @@
 </head>
 <body>
     <!-- Секция радио -->
-    <div class="radio-subtitle">Радио</div>
-    <div class="player-center">
-        <div class="cover-image" id="coverImage"></div>
-        <div class="track-info">
-            <div class="track-name" id="trackName">Загрузка...</div>
-            <div class="track-artist" id="trackArtist">Загрузка...</div>
+    <div class="radio-section">
+        <div class="radio-subtitle">Радио</div>
+        <div class="player-center">
+            <div class="cover-image" id="coverImage"></div>
+            <div class="track-info">
+                <div class="track-name" id="trackName">Загрузка...</div>
+                <div class="track-artist" id="trackArtist">Загрузка...</div>
+            </div>
         </div>
     </div>
 
     <!-- Секция плейлиста -->
     <div class="playlist-section">
         <div class="playlist-subtitle">Плейлист</div>
-        <div class="playlist-empty" id="playlistEmpty">
-            <div class="playlist-text">Перетащите сюда песни из рекомендаций</div>
+        <div class="playlist-empty">
+            <div class="playlist-text">Плейлист пуст…</div>
         </div>
     </div>
 
     <!-- Секция рекомендаций -->
     <div class="recommendations-section">
-        <div class="recommendations-header" id="recommendationsHeader">
-            <div class="recommendations-title">Рекомендуем</div>
-            <svg class="chevron" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
-            </svg>
-        </div>
-        
-        <div class="recommendations-container" id="recommendationsContainer">
-            <div class="songs-grid" id="songsGrid"></div>
-            <button class="load-more" id="loadMoreBtn">
-                <svg class="reload-icon" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
-                </svg>
-                Загрузить еще
-            </button>
+        <div class="recommendations-subtitle">Рекомендуем</div>
+        <div class="albums-scroll">
+            <!-- Альбом 1 -->
+            <div class="album-card">
+                <div class="album-cover" style="background-image: url('https://i.ibb.co/kgS1djYn/IMG-7778.png')"></div>
+                <div class="album-title">Human</div>
+                <div class="album-artist">Three Days Grace</div>
+            </div>
+            
+            <!-- Альбом 2 -->
+            <div class="album-card">
+                <div class="album-cover" style="background-image: url('https://i.ibb.co/jPpmsv43/IMG-7788.gif')"></div>
+                <div class="album-title">Alienation</div>
+                <div class="album-artist">Three Days Grace</div>
+            </div>
+            
+            <!-- Альбом 3 -->
+            <div class="album-card">
+                <div class="album-cover" style="background-image: url('https://i.ibb.co/cXD2fXZf/IMG-7817.jpg')"></div>
+                <div class="album-title">The Eminem Show</div>
+                <div class="album-artist">Eminem</div>
+            </div>
+            
+            <!-- Альбом 4 -->
+            <div class="album-card">
+                <div class="album-cover" style="background-image: url('https://i.ibb.co/JFsxnD2F/IMG-7777.png')"></div>
+                <div class="album-title">Swan Songs</div>
+                <div class="album-artist">Hollywood Undead</div>
+            </div>
         </div>
     </div>
 
     <script>
-        // Массив для хранения всех песен
-        let allSongs = [];
-        let displayedSongs = [];
-        let currentDisplayCount = 0;
-        const SONGS_PER_LOAD = 15;
-        let recommendationsOpen = false;
-        let dragSong = null;
-        let longPressTimer = null;
-        let isDragging = false;
-
         // Запрет масштабирования и выделения
         document.addEventListener('gesturestart', function(e) {
             e.preventDefault();
@@ -356,6 +263,19 @@
         document.addEventListener('contextmenu', function(e) {
             e.preventDefault();
         });
+        
+        // Предотвращение двойного тапа для зумирования
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        // Массив для хранения всех песен
+        let allSongs = [];
 
         // Функция для загрузки и парсинга songs.txt
         async function loadSongs() {
@@ -364,7 +284,6 @@
                 const text = await response.text();
                 parseSongs(text);
                 selectRandomSong();
-                shuffleSongs();
             } catch (error) {
                 console.error('Ошибка загрузки songs.txt:', error);
                 document.getElementById('trackName').textContent = 'Ошибка загрузки';
@@ -380,20 +299,20 @@
             for (const line of lines) {
                 const trimmedLine = line.trim();
                 
-                if (!trimmedLine) continue;
+                if (!trimmedLine) continue; // Пропускаем пустые строки
                 
+                // Если строка не содержит дефисов - это название группы
                 if (!trimmedLine.includes(' - ')) {
                     currentArtist = trimmedLine;
                 } else {
+                    // Это строка с песней
                     const parts = trimmedLine.split(' - ');
                     if (parts.length === 3) {
                         const song = {
                             name: parts[0].trim(),
                             audioUrl: parts[1].trim(),
                             imageUrl: parts[2].trim(),
-                            artist: currentArtist,
-                            liked: false,
-                            favorite: false
+                            artist: currentArtist
                         };
                         allSongs.push(song);
                     }
@@ -401,23 +320,7 @@
             }
         }
 
-        // Перемешивание песен для рекомендаций
-        function shuffleSongs() {
-            displayedSongs = [...allSongs];
-            // Сначала избранные
-            const favorites = displayedSongs.filter(song => song.favorite);
-            const notFavorites = displayedSongs.filter(song => !song.favorite);
-            
-            // Перемешиваем не избранные
-            for (let i = notFavorites.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [notFavorites[i], notFavorites[j]] = [notFavorites[j], notFavorites[i]];
-            }
-            
-            displayedSongs = [...favorites, ...notFavorites];
-        }
-
-        // Функция случайного выбора песни для радио
+        // Функция случайного выбора песни
         function selectRandomSong() {
             if (allSongs.length === 0) {
                 document.getElementById('trackName').textContent = 'Нет песен';
@@ -428,289 +331,10 @@
             const randomIndex = Math.floor(Math.random() * allSongs.length);
             const randomSong = allSongs[randomIndex];
             
+            // Обновляем интерфейс
             document.getElementById('trackName').textContent = randomSong.name;
             document.getElementById('trackArtist').textContent = randomSong.artist;
             document.getElementById('coverImage').style.backgroundImage = `url('${randomSong.imageUrl}')`;
-        }
-
-        // Загрузка песен для рекомендаций
-        function loadRecommendationSongs() {
-            const songsGrid = document.getElementById('songsGrid');
-            const startIndex = currentDisplayCount;
-            const endIndex = Math.min(startIndex + SONGS_PER_LOAD, displayedSongs.length);
-            
-            for (let i = startIndex; i < endIndex; i++) {
-                const song = displayedSongs[i];
-                const songElement = createSongElement(song, i);
-                songsGrid.appendChild(songElement);
-                
-                // Анимация появления
-                setTimeout(() => {
-                    songElement.style.opacity = '1';
-                    songElement.style.transform = 'translateY(0)';
-                }, (i - startIndex) * 50);
-            }
-            
-            currentDisplayCount = endIndex;
-            updateLoadMoreButton();
-        }
-
-        // Создание элемента песни
-        function createSongElement(song, index) {
-            const songElement = document.createElement('div');
-            songElement.className = `song-item ${song.favorite ? 'favorite' : ''}`;
-            songElement.style.opacity = '0';
-            songElement.style.transform = 'translateY(10px)';
-            songElement.style.transition = 'all 0.3s ease';
-            songElement.setAttribute('data-index', index);
-            
-            songElement.innerHTML = `
-                <div class="song-cover" style="background-image: url('${song.imageUrl}')"></div>
-                <div class="song-name">${song.name}</div>
-                <button class="heart-btn ${song.liked ? 'liked' : ''}">
-                    <svg class="heart-icon" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                    </svg>
-                </button>
-            `;
-            
-            // Обработчики для drag & drop
-            setupDragAndDrop(songElement, song, index);
-            
-            return songElement;
-        }
-
-        // Настройка drag & drop
-        function setupDragAndDrop(element, song, index) {
-            let startX, startY;
-            
-            element.addEventListener('touchstart', handleTouchStart);
-            element.addEventListener('mousedown', handleMouseStart);
-            
-            function handleTouchStart(e) {
-                startX = e.touches[0].clientX;
-                startY = e.touches[0].clientY;
-                longPressTimer = setTimeout(() => {
-                    startDrag(e.touches[0].clientX, e.touches[0].clientY, element, song, index);
-                    element.classList.add('vibrate');
-                    setTimeout(() => element.classList.remove('vibrate'), 300);
-                }, 1000);
-                
-                document.addEventListener('touchmove', handleTouchMove);
-                document.addEventListener('touchend', handleTouchEnd);
-            }
-            
-            function handleMouseStart(e) {
-                startX = e.clientX;
-                startY = e.clientY;
-                longPressTimer = setTimeout(() => {
-                    startDrag(e.clientX, e.clientY, element, song, index);
-                    element.classList.add('vibrate');
-                    setTimeout(() => element.classList.remove('vibrate'), 300);
-                }, 1000);
-                
-                document.addEventListener('mousemove', handleMouseMove);
-                document.addEventListener('mouseup', handleMouseEnd);
-            }
-            
-            function handleTouchMove(e) {
-                if (longPressTimer && !isDragging) {
-                    const currentX = e.touches[0].clientX;
-                    const currentY = e.touches[0].clientY;
-                    const distance = Math.sqrt(Math.pow(currentX - startX, 2) + Math.pow(currentY - startY, 2));
-                    
-                    if (distance > 10) {
-                        clearTimeout(longPressTimer);
-                        longPressTimer = null;
-                    }
-                }
-            }
-            
-            function handleMouseMove(e) {
-                if (longPressTimer && !isDragging) {
-                    const distance = Math.sqrt(Math.pow(e.clientX - startX, 2) + Math.pow(e.clientY - startY, 2));
-                    
-                    if (distance > 10) {
-                        clearTimeout(longPressTimer);
-                        longPressTimer = null;
-                    }
-                }
-            }
-            
-            function handleTouchEnd() {
-                clearTimeout(longPressTimer);
-                document.removeEventListener('touchmove', handleTouchMove);
-                document.removeEventListener('touchend', handleTouchEnd);
-            }
-            
-            function handleMouseEnd() {
-                clearTimeout(longPressTimer);
-                document.removeEventListener('mousemove', handleMouseMove);
-                document.removeEventListener('mouseup', handleMouseEnd);
-            }
-        }
-
-        function startDrag(clientX, clientY, element, song, index) {
-            isDragging = true;
-            dragSong = { element, song, index };
-            
-            element.classList.add('dragging');
-            document.body.style.cursor = 'grabbing';
-            
-            // Показываем зону плейлиста
-            const playlistEmpty = document.getElementById('playlistEmpty');
-            playlistEmpty.classList.add('drag-over');
-            
-            document.addEventListener('mousemove', handleDragMove);
-            document.addEventListener('touchmove', handleDragMove);
-            document.addEventListener('mouseup', handleDragEnd);
-            document.addEventListener('touchend', handleDragEnd);
-        }
-
-        function handleDragMove(e) {
-            if (!isDragging) return;
-            
-            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-            
-            // Проверяем, находится ли курсор над плейлистом
-            const playlistEmpty = document.getElementById('playlistEmpty');
-            const playlistRect = playlistEmpty.getBoundingClientRect();
-            const isOverPlaylist = clientX >= playlistRect.left && clientX <= playlistRect.right &&
-                                 clientY >= playlistRect.top && clientY <= playlistRect.bottom;
-            
-            playlistEmpty.classList.toggle('drag-over', isOverPlaylist);
-        }
-
-        function handleDragEnd(e) {
-            if (!isDragging) return;
-            
-            isDragging = false;
-            document.body.style.cursor = '';
-            
-            const playlistEmpty = document.getElementById('playlistEmpty');
-            const clientX = e.clientX || (e.changedTouches && e.changedTouches[0].clientX);
-            const clientY = e.clientY || (e.changedTouches && e.changedTouches[0].clientY);
-            
-            // Проверяем, была ли песня перенесена в плейлист
-            const playlistRect = playlistEmpty.getBoundingClientRect();
-            const isOverPlaylist = clientX >= playlistRect.left && clientX <= playlistRect.right &&
-                                 clientY >= playlistRect.top && clientY <= playlistRect.bottom;
-            
-            if (isOverPlaylist && dragSong) {
-                // Добавляем в плейлист (здесь можно добавить логику)
-                addToPlaylist(dragSong.song);
-                // Убираем из рекомендаций
-                removeFromRecommendations(dragSong.index);
-            }
-            
-            // Сбрасываем состояние
-            if (dragSong) {
-                dragSong.element.classList.remove('dragging');
-            }
-            playlistEmpty.classList.remove('drag-over');
-            dragSong = null;
-            
-            document.removeEventListener('mousemove', handleDragMove);
-            document.removeEventListener('touchmove', handleDragMove);
-            document.removeEventListener('mouseup', handleDragEnd);
-            document.removeEventListener('touchend', handleDragEnd);
-        }
-
-        function addToPlaylist(song) {
-            // Здесь можно добавить логику добавления в плейлист
-            console.log('Добавлено в плейлист:', song.name);
-            // Можно обновить интерфейс плейлиста
-        }
-
-        function removeFromRecommendations(index) {
-            // Плавно убираем песню из рекомендаций
-            const songElement = document.querySelector(`.song-item[data-index="${index}"]`);
-            if (songElement) {
-                songElement.style.transition = 'all 0.5s ease';
-                songElement.style.opacity = '0';
-                songElement.style.transform = 'translateX(100%)';
-                
-                setTimeout(() => {
-                    songElement.remove();
-                    // Обновляем индексы оставшихся элементов
-                    updateSongIndexes();
-                }, 500);
-            }
-        }
-
-        function updateSongIndexes() {
-            const songElements = document.querySelectorAll('.song-item');
-            songElements.forEach((element, newIndex) => {
-                element.setAttribute('data-index', newIndex);
-            });
-        }
-
-        // Обновление кнопки "Загрузить еще"
-        function updateLoadMoreButton() {
-            const loadMoreBtn = document.getElementById('loadMoreBtn');
-            if (currentDisplayCount >= displayedSongs.length) {
-                loadMoreBtn.style.display = 'none';
-            } else {
-                loadMoreBtn.style.display = 'flex';
-            }
-        }
-
-        // Обработчики событий
-        document.getElementById('recommendationsHeader').addEventListener('click', function() {
-            const container = document.getElementById('recommendationsContainer');
-            const chevron = this.querySelector('.chevron');
-            
-            recommendationsOpen = !recommendationsOpen;
-            
-            if (recommendationsOpen) {
-                container.classList.add('active');
-                chevron.classList.add('down');
-                if (currentDisplayCount === 0) {
-                    loadRecommendationSongs();
-                }
-            } else {
-                container.classList.remove('active');
-                chevron.classList.remove('down');
-            }
-        });
-
-        document.getElementById('loadMoreBtn').addEventListener('click', function() {
-            this.classList.add('loading');
-            setTimeout(() => {
-                loadRecommendationSongs();
-                this.classList.remove('loading');
-            }, 500);
-        });
-
-        // Обработчик для лайков
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('.heart-btn')) {
-                const heartBtn = e.target.closest('.heart-btn');
-                const songElement = heartBtn.closest('.song-item');
-                const songIndex = parseInt(songElement.getAttribute('data-index'));
-                const song = displayedSongs[songIndex];
-                
-                song.liked = !song.liked;
-                song.favorite = song.liked;
-                heartBtn.classList.toggle('liked', song.liked);
-                songElement.classList.toggle('favorite', song.favorite);
-                
-                // Перемещаем в начало списка
-                if (song.favorite) {
-                    const favorites = displayedSongs.filter(s => s.favorite);
-                    const notFavorites = displayedSongs.filter(s => !s.favorite && s !== song);
-                    displayedSongs = [...favorites, ...notFavorites];
-                    rerenderSongs();
-                }
-            }
-        });
-
-        function rerenderSongs() {
-            const songsGrid = document.getElementById('songsGrid');
-            songsGrid.innerHTML = '';
-            currentDisplayCount = 0;
-            loadRecommendationSongs();
         }
 
         // Загружаем песни при загрузке страницы
