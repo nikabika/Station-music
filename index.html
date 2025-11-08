@@ -35,17 +35,22 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            padding: 30px 20px;
+            padding: 30px 20px 80px;
             overflow-x: hidden;
             touch-action: pan-y;
         }
         
-        /* Хедер */
+        /* Фиксированный хедер */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
+            position: sticky;
+            top: 0;
+            background: #121212;
+            padding: 10px 0;
+            z-index: 100;
         }
         
         .radio-title {
@@ -61,53 +66,6 @@
             border-radius: 50%;
             background: #2a2a2a;
             flex-shrink: 0;
-        }
-        
-        /* Секция радио */
-        .radio-section {
-            margin-bottom: 40px;
-        }
-        
-        .radio-player {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        
-        .radio-cover {
-            width: 100px;
-            height: 100px;
-            background: #CC5551;
-            border-radius: 18px;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'New Rocker', cursive;
-            font-size: 18px;
-            color: white;
-        }
-        
-        .track-info {
-            flex: 1;
-            min-width: 0;
-        }
-        
-        .track-name {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 6px;
-            white-space: normal;
-            word-wrap: break-word;
-            line-height: 1.3;
-        }
-        
-        .track-artist {
-            font-size: 14px;
-            color: #aaa;
-            white-space: normal;
-            word-wrap: break-word;
-            line-height: 1.3;
         }
         
         /* Секция плейлиста */
@@ -151,23 +109,31 @@
         
         .album-card {
             flex: 0 0 auto;
-            width: 140px;
-            cursor: pointer;
-            transition: transform 0.2s ease;
+            width: 160px;
         }
         
-        .album-card:hover {
-            transform: scale(1.05);
+        .album-cover-container {
+            position: relative;
+            margin-bottom: 15px;
         }
         
         .album-cover {
-            width: 140px;
-            height: 140px;
-            background: #1a1a1a;
+            width: 160px;
+            height: 160px;
             border-radius: 18px;
-            margin-bottom: 12px;
             background-size: cover;
             background-position: center;
+        }
+        
+        .album-info-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 3px;
+            right: 3px;
+            background: rgba(26, 26, 26, 0.9);
+            border-radius: 15px;
+            padding: 12px 10px;
+            margin: 3px;
         }
         
         .album-title {
@@ -180,108 +146,52 @@
         .album-artist {
             font-size: 12px;
             color: #aaa;
+            line-height: 1.3;
         }
         
-        /* Модальное окно альбома */
-        .album-modal {
+        /* Футер */
+        .footer {
             position: fixed;
-            top: 0;
+            bottom: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            display: flex;
-            flex-direction: column;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-        
-        .album-modal.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .album-header {
-            padding: 50px 20px 30px;
+            right: 0;
+            background: #121212;
+            padding: 20px;
             text-align: center;
+            border-top: 1px solid #2a2a2a;
         }
         
-        .album-cover-large {
-            width: 250px;
-            height: 250px;
-            margin: 0 auto 25px;
-            border-radius: 20px;
-            background-size: cover;
-            background-position: center;
-        }
-        
-        .album-title-large {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-        
-        .album-artist-large {
-            font-size: 18px;
+        .copyright {
+            font-size: 12px;
             color: #aaa;
+            margin-bottom: 5px;
         }
         
-        .songs-list {
-            flex: 1;
-            overflow-y: auto;
-            padding: 0 20px 30px;
-        }
-        
-        .song-item {
-            padding: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            cursor: pointer;
-            transition: background 0.2s ease;
-        }
-        
-        .song-item:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-        
-        .song-item:last-child {
-            border-bottom: none;
-        }
-        
-        .song-name {
-            font-size: 16px;
-            font-weight: 500;
+        .disclaimer {
+            font-size: 10px;
+            color: #666;
         }
         
         @media (max-width: 480px) {
-            .radio-cover {
-                width: 80px;
-                height: 80px;
-                font-size: 14px;
-            }
-            
-            .track-name {
-                font-size: 16px;
-            }
-            
-            .track-artist {
-                font-size: 13px;
-            }
-            
             .album-card {
-                width: 120px;
+                width: 140px;
             }
             
             .album-cover {
-                width: 120px;
-                height: 120px;
+                width: 140px;
+                height: 140px;
             }
             
-            .album-cover-large {
-                width: 200px;
-                height: 200px;
+            .album-info-overlay {
+                padding: 10px 8px;
+            }
+            
+            .album-title {
+                font-size: 13px;
+            }
+            
+            .album-artist {
+                font-size: 11px;
             }
         }
     </style>
@@ -289,22 +199,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=New+Rocker&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Хедер -->
+    <!-- Фиксированный хедер -->
     <div class="header">
         <div class="radio-title">STATION</div>
         <div class="avatar-circle"></div>
-    </div>
-
-    <!-- Секция радио -->
-    <div class="radio-section">
-        <div class="section-subtitle">Радио</div>
-        <div class="radio-player">
-            <div class="radio-cover">RADIO</div>
-            <div class="track-info">
-                <div class="track-name">Радио</div>
-                <div class="track-artist">STATION</div>
-            </div>
-        </div>
     </div>
 
     <!-- Секция плейлиста -->
@@ -323,16 +221,10 @@
         </div>
     </div>
 
-    <!-- Модальное окно альбома -->
-    <div class="album-modal" id="albumModal">
-        <div class="album-header">
-            <div class="album-cover-large" id="modalAlbumCover"></div>
-            <div class="album-title-large" id="modalAlbumTitle"></div>
-            <div class="album-artist-large" id="modalAlbumArtist"></div>
-        </div>
-        <div class="songs-list" id="songsList">
-            <!-- Список песен загружается динамически -->
-        </div>
+    <!-- Футер -->
+    <div class="footer">
+        <div class="copyright">© STATION • 2025</div>
+        <div class="disclaimer">Автор не несет ответственность за размещенный материал</div>
     </div>
 
     <script>
@@ -411,7 +303,6 @@
             if (currentAlbum) albums.push(currentAlbum);
             
             console.log('Загружено альбомов:', albums.length);
-            console.log('Альбомы:', albums);
         }
 
         function renderAlbums() {
@@ -427,42 +318,18 @@
                 const albumElement = document.createElement('div');
                 albumElement.className = 'album-card';
                 albumElement.innerHTML = `
-                    <div class="album-cover" style="background-image: url('${album.image}')"></div>
-                    <div class="album-title">${album.title}</div>
-                    <div class="album-artist">${album.artist}</div>
+                    <div class="album-cover-container">
+                        <div class="album-cover" style="background-image: url('${album.image}')"></div>
+                        <div class="album-info-overlay">
+                            <div class="album-title">${album.title}</div>
+                            <div class="album-artist">${album.artist}</div>
+                        </div>
+                    </div>
                 `;
                 
-                albumElement.addEventListener('click', () => openAlbumModal(album));
                 container.appendChild(albumElement);
             });
         }
-
-        function openAlbumModal(album) {
-            document.getElementById('modalAlbumCover').style.backgroundImage = `url('${album.image}')`;
-            document.getElementById('modalAlbumTitle').textContent = album.title;
-            document.getElementById('modalAlbumArtist').textContent = album.artist;
-            
-            const songsList = document.getElementById('songsList');
-            songsList.innerHTML = '';
-            
-            album.songs.forEach(song => {
-                const songElement = document.createElement('div');
-                songElement.className = 'song-item';
-                songElement.innerHTML = `<div class="song-name">${song.name}</div>`;
-                songsList.appendChild(songElement);
-            });
-            
-            document.getElementById('albumModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        // Закрытие модального окна
-        document.getElementById('albumModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.classList.remove('active');
-                document.body.style.overflow = 'auto';
-            }
-        });
 
         // Загрузка при старте
         window.addEventListener('load', loadSongs);
