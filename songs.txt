@@ -1,11 +1,19 @@
-Three Days Grace - Human - https://i.ibb.co/kgS1djYn/IMG-7778.png
-Human race - https://dl.dropboxusercontent.com/scl/fi/myfw4vujql27z8shaqh9f/Dominate.mp3?rlkey=bzbgg61e8x1pb9pbttk1pqr7l&st=8acm3td3
+ARTIST: Three Days Grace
+ALBUM: Human
+IMAGE: https://i.ibb.co/kgS1djYn/IMG-7778.png
+SONG: Human race - https://dl.dropboxusercontent.com/scl/fi/myfw4vujql27z8shaqh9f/Dominate.mp3?rlkey=bzbgg61e8x1pb9pbttk1pqr7l&st=8acm3td3
 
-Three Days Grace - Alienation - https://i.ibb.co/jPpmsv43/IMG-7788.gif
-Dominate - https://dl.dropboxusercontent.com/scl/fi/myfw4vujql27z8shaqh9f/Dominate.mp3?rlkey=bzbgg61e8x1pb9pbttk1pqr7l&st=8acm3td3
+ARTIST: Three Days Grace
+ALBUM: Alienation
+IMAGE: https://i.ibb.co/jPpmsv43/IMG-7788.gif
+SONG: Dominate - https://dl.dropboxusercontent.com/scl/fi/myfw4vujql27z8shaqh9f/Dominate.mp3?rlkey=bzbgg61e8x1pb9pbttk1pqr7l&st=8acm3td3
 
-Eminem - The Eminem Show - https://i.ibb.co/cXD2fXZf/IMG-7817.jpg
-Without Me - https://example.com/without-me.mp3
+ARTIST: Eminem
+ALBUM: The Eminem Show
+IMAGE: https://i.ibb.co/cXD2fXZf/IMG-7817.jpg
+SONG: Without Me - https://example.com/without-me.mp3
 
-Hollywood Undead - Swan Songs - https://i.ibb.co/JFsxnD2F/IMG-7777.png
-Undead - https://example.com/undead.mp3
+ARTIST: Hollywood Undead
+ALBUM: Swan Songs
+IMAGE: https://i.ibb.co/JFsxnD2F/IMG-7777.png
+SONG: Undead - https://example.com/undead.mp3
