@@ -16,7 +16,6 @@
             user-select: none;
         }
         
-        /* Запрет масштабирования */
         html {
             -webkit-text-size-adjust: 100%;
             -ms-text-size-adjust: 100%;
@@ -58,7 +57,7 @@
             touch-action: pan-y;
         }
         
-        /* Анимации появления */
+        /* Анимации */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -91,7 +90,7 @@
             animation: slideUp 0.5s ease-out 0.4s both;
         }
         
-        /* Фиксированный хедер с разделительной линией */
+        /* Хедер */
         .header {
             display: flex;
             justify-content: space-between;
@@ -122,16 +121,28 @@
             background-position: center;
         }
         
-        /* Секция плейлиста */
+        /* Секция медиатеки */
         .playlist-section {
             margin-top: 20px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
         
         .section-subtitle {
             font-size: 24px;
             color: white;
-            margin-bottom: 20px;
             font-weight: 600;
+        }
+        
+        .songs-count {
+            font-size: 14px;
+            color: #aaa;
+            font-weight: normal;
         }
         
         .playlist-empty {
@@ -146,6 +157,170 @@
             font-size: 16px;
             color: #aaa;
             text-align: center;
+        }
+        
+        /* Песни в медиатеке */
+        .songs-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .song-item {
+            display: flex;
+            align-items: center;
+            background: rgba(26, 26, 26, 0.9);
+            border-radius: 16px;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .song-item.pinned {
+            background: rgba(204, 85, 81, 0.1);
+            border: 1px solid rgba(204, 85, 81, 0.3);
+        }
+        
+        .song-cover {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background-size: cover;
+            background-position: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .song-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .song-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .song-artist {
+            font-size: 13px;
+            color: #aaa;
+        }
+        
+        .song-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .pin-icon {
+            width: 16px;
+            height: 16px;
+            color: #CC5551;
+            flex-shrink: 0;
+        }
+        
+        .menu-btn {
+            width: 24px;
+            height: 24px;
+            opacity: 0.7;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .menu-dots {
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            position: relative;
+        }
+        
+        .menu-dots::before,
+        .menu-dots::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            left: 0;
+        }
+        
+        .menu-dots::before {
+            top: -6px;
+        }
+        
+        .menu-dots::after {
+            bottom: -6px;
+        }
+        
+        /* iOS-style меню */
+        .action-sheet {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #1a1a1a;
+            border-radius: 20px 20px 0 0;
+            padding: 20px;
+            z-index: 1000;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .action-sheet.active {
+            transform: translateY(0);
+        }
+        
+        .action-sheet-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .action-sheet-backdrop.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .action-item {
+            width: 100%;
+            padding: 18px 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 17px;
+            text-align: center;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            border-bottom: 1px solid #2a2a2a;
+        }
+        
+        .action-item:last-child {
+            border-bottom: none;
+            color: #CC5551;
+            font-weight: 600;
+        }
+        
+        .action-item.cancel {
+            margin-top: 10px;
+            background: #2a2a2a;
+            border-radius: 12px;
+            border: none;
         }
         
         /* Секция рекомендаций */
@@ -244,23 +419,35 @@
             .album-title {
                 font-size: 13px;
             }
+            
+            .song-cover {
+                width: 45px;
+                height: 45px;
+            }
+            
+            .song-name {
+                font-size: 15px;
+            }
         }
     </style>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=New+Rocker&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Фиксированный хедер с разделительной линией -->
+    <!-- Хедер -->
     <div class="header">
         <div class="radio-title">STATION</div>
         <div class="avatar-circle" id="userAvatar"></div>
     </div>
 
-    <!-- Секция плейлиста -->
+    <!-- Секция медиатеки -->
     <div class="playlist-section">
-        <div class="section-subtitle">Плейлист</div>
-        <div class="playlist-empty">
-            <div class="playlist-text">Плейлист пуст…</div>
+        <div class="section-header">
+            <div class="section-subtitle">Медиатека</div>
+            <div class="songs-count" id="songsCount">0 песен</div>
+        </div>
+        <div class="songs-list" id="songsList">
+            <!-- Песни загружаются динамически -->
         </div>
     </div>
 
@@ -278,23 +465,41 @@
         <div class="disclaimer">Автор не несет ответственность за размещенный материал</div>
     </div>
 
+    <!-- iOS Action Sheet -->
+    <div class="action-sheet-backdrop" id="actionSheetBackdrop"></div>
+    <div class="action-sheet" id="actionSheet">
+        <button class="action-item" id="pinAction">Закрепить</button>
+        <button class="action-item" id="deleteAction">Удалить</button>
+        <button class="action-item cancel" id="cancelAction">Отмена</button>
+    </div>
+
     <script>
         // Проверяем авторизацию
         const userData = JSON.parse(localStorage.getItem('station_current_user'));
         if (!userData) {
-            // Если нет сохраненного пользователя, возвращаем на страницу входа
             window.location.href = 'index.html';
         }
+
+        // Начальные песни для пользователей
+        const userLibrary = {
+            'user_447123': ['Painkiller', 'The Power', 'I Am Machine', 'Kill Me Fast', 'Mayday'],
+            'user_559817': ['No. 5']
+        };
+
+        // Загружаем библиотеку пользователя
+        let userSongs = JSON.parse(localStorage.getItem(`station_library_${userData.userId}`)) || 
+                       userLibrary[userData.userId] || [];
 
         // Устанавливаем аватарку
         if (userData.avatar) {
             document.getElementById('userAvatar').style.backgroundImage = `url('${userData.avatar}')`;
         }
 
-        // Остальной код загрузки альбомов...
         let albums = [];
+        let allSongsMap = new Map();
+        let currentActionSong = null;
 
-        // Функция для обрезки текста (только для названий)
+        // Функция для обрезки текста
         function truncateText(text, maxLength = 10) {
             if (text.length > maxLength) {
                 return text.substring(0, maxLength) + '…';
@@ -302,15 +507,16 @@
             return text;
         }
 
+        // Загрузка песен
         async function loadSongs() {
             try {
                 const response = await fetch('songs.txt');
                 const text = await response.text();
                 parseSongs(text);
+                renderUserLibrary();
                 renderAlbums();
             } catch (error) {
                 console.error('Ошибка загрузки:', error);
-                document.getElementById('albumsScroll').innerHTML = '<div style="color: #aaa; text-align: center;">Ошибка загрузки альбомов</div>';
             }
         }
 
@@ -339,10 +545,15 @@
                     const songData = trimmedLine.replace('SONG:', '').trim();
                     const [name, audioUrl] = songData.split(' - ');
                     if (name && audioUrl) {
-                        currentAlbum.songs.push({
+                        const song = {
                             name: name.trim(),
-                            audioUrl: audioUrl.trim()
-                        });
+                            audioUrl: audioUrl.trim(),
+                            artist: currentAlbum.artist,
+                            image: currentAlbum.image,
+                            album: currentAlbum.title
+                        };
+                        currentAlbum.songs.push(song);
+                        allSongsMap.set(name.trim(), song);
                     }
                 }
             }
@@ -350,6 +561,131 @@
             if (currentAlbum) albums.push(currentAlbum);
         }
 
+        // Рендер библиотеки пользователя
+        function renderUserLibrary() {
+            const container = document.getElementById('songsList');
+            const countElement = document.getElementById('songsCount');
+            
+            if (userSongs.length === 0) {
+                container.innerHTML = `
+                    <div class="playlist-empty">
+                        <div class="playlist-text">Медиатека пуста…</div>
+                    </div>
+                `;
+                countElement.textContent = '0 песен';
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            // Разделяем на закрепленные и обычные
+            const pinnedSongs = userSongs.filter(song => song.pinned).map(song => song.name || song);
+            const normalSongs = userSongs.filter(song => !song.pinned).map(song => song.name || song);
+            
+            // Рендерим закрепленные
+            pinnedSongs.forEach((songName, index) => {
+                const songData = allSongsMap.get(songName);
+                if (songData) {
+                    const songElement = createSongElement(songData, true, index);
+                    container.appendChild(songElement);
+                }
+            });
+            
+            // Рендерим обычные
+            normalSongs.forEach((songName, index) => {
+                const songData = allSongsMap.get(songName);
+                if (songData) {
+                    const songElement = createSongElement(songData, false, pinnedSongs.length + index);
+                    container.appendChild(songElement);
+                }
+            });
+            
+            countElement.textContent = `${userSongs.length} ${getSongWord(userSongs.length)}`;
+        }
+
+        function createSongElement(songData, isPinned, index) {
+            const songElement = document.createElement('div');
+            songElement.className = `song-item ${isPinned ? 'pinned' : ''}`;
+            songElement.style.animationDelay = `${0.2 + (index * 0.05)}s`;
+            songElement.innerHTML = `
+                <div class="song-cover" style="background-image: url('${songData.image}')"></div>
+                <div class="song-info">
+                    <div class="song-name">${songData.name}</div>
+                    <div class="song-artist">${songData.artist}</div>
+                </div>
+                <div class="song-actions">
+                    ${isPinned ? `
+                        <svg class="pin-icon" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M10.5 1.5L14.5 5.5L9.5 10.5L11 12L6 17L1 12L3 10L5.5 12.5L1.5 8.5L5.5 4.5L7 6L10.5 1.5Z"/>
+                        </svg>
+                    ` : ''}
+                    <div class="menu-btn" onclick="showActionSheet('${songData.name}')">
+                        <div class="menu-dots"></div>
+                    </div>
+                </div>
+            `;
+            return songElement;
+        }
+
+        function getSongWord(count) {
+            if (count % 10 === 1 && count % 100 !== 11) return 'песня';
+            if (count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 >= 20)) return 'песни';
+            return 'песен';
+        }
+
+        // Action Sheet
+        function showActionSheet(songName) {
+            currentActionSong = songName;
+            const isPinned = userSongs.some(song => (song.name || song) === songName && song.pinned);
+            
+            document.getElementById('pinAction').textContent = isPinned ? 'Открепить' : 'Закрепить';
+            document.getElementById('actionSheetBackdrop').classList.add('active');
+            document.getElementById('actionSheet').classList.add('active');
+        }
+
+        function hideActionSheet() {
+            document.getElementById('actionSheetBackdrop').classList.remove('active');
+            document.getElementById('actionSheet').classList.remove('active');
+            currentActionSong = null;
+        }
+
+        // Закрепить/открепить песню
+        function togglePinSong() {
+            if (!currentActionSong) return;
+            
+            const songIndex = userSongs.findIndex(song => (song.name || song) === currentActionSong);
+            if (songIndex !== -1) {
+                if (typeof userSongs[songIndex] === 'string') {
+                    userSongs[songIndex] = { name: userSongs[songIndex], pinned: true };
+                } else {
+                    userSongs[songIndex].pinned = !userSongs[songIndex].pinned;
+                }
+                
+                // Перемещаем закрепленную песню в начало
+                if (userSongs[songIndex].pinned) {
+                    const pinnedSong = userSongs.splice(songIndex, 1)[0];
+                    userSongs.unshift(pinnedSong);
+                }
+                
+                saveUserLibrary();
+                renderUserLibrary();
+            }
+            
+            hideActionSheet();
+        }
+
+        // Удалить песню (пока не работает)
+        function deleteSong() {
+            // Функциональность удаления будет добавлена позже
+            hideActionSheet();
+        }
+
+        // Сохранить библиотеку
+        function saveUserLibrary() {
+            localStorage.setItem(`station_library_${userData.userId}`, JSON.stringify(userSongs));
+        }
+
+        // Рендер альбомов
         function renderAlbums() {
             const container = document.getElementById('albumsScroll');
             container.innerHTML = '';
@@ -372,11 +708,17 @@
                         </div>
                     </div>
                 `;
-                
                 container.appendChild(albumElement);
             });
         }
 
+        // Обработчики событий
+        document.getElementById('actionSheetBackdrop').addEventListener('click', hideActionSheet);
+        document.getElementById('pinAction').addEventListener('click', togglePinSong);
+        document.getElementById('deleteAction').addEventListener('click', deleteSong);
+        document.getElementById('cancelAction').addEventListener('click', hideActionSheet);
+
+        // Загрузка при старте
         window.addEventListener('load', loadSongs);
     </script>
 </body>
