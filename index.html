@@ -152,6 +152,10 @@
             color: #4CAF50;
         }
         
+        .password-hint.error {
+            color: #f44336;
+        }
+        
         .back-btn {
             display: flex;
             align-items: center;
@@ -236,16 +240,9 @@
             <span class="station-text">STATION</span>
         </h1>
         
-        <button class="btn" onclick="continueAsGuest()">
-            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 5.5V7H9V5.5L3 7V9L5 9.5V15.5L3 16V18L9 16.5V18H15V16.5L21 18V16L19 15.5V9.5L21 9Z" fill="#171717"/>
-            </svg>
-            Продолжить как гость
-        </button>
-        
         <button class="btn" onclick="showPasswordScreen()">
             <div class="btn-icon">S</div>
-            Продолжить с Password
+            Войти с паролем
         </button>
         
         <p class="copyright">Музыка от STATION. 2025</p>
@@ -292,13 +289,25 @@
         const accounts = {
             '559817': {
                 nickname: 'RibaPibaa',
-                avatar: 'https://i.ibb.co/3mRc7ZFg/IMG-7864.jpg'
+                avatar: 'https://i.ibb.co/3mRc7ZFg/IMG-7864.jpg',
+                userId: 'user_559817'
             },
             '447123': {
                 nickname: 'fiz',
-                avatar: 'https://i.ibb.co/DHwKjMGX/IMG-1427.jpg'
+                avatar: 'https://i.ibb.co/DHwKjMGX/IMG-1427.jpg',
+                userId: 'user_447123'
             }
         };
+
+        // Проверяем, есть ли сохраненный пользователь
+        function checkSavedUser() {
+            const savedUser = localStorage.getItem('station_current_user');
+            if (savedUser) {
+                const userData = JSON.parse(savedUser);
+                // Если есть сохраненный пользователь, сразу показываем экран пароля
+                showPasswordScreen();
+            }
+        }
 
         // Переключение между экранами
         function showMainScreen() {
@@ -313,15 +322,6 @@
             setTimeout(() => {
                 document.querySelector('.password-field').focus();
             }, 500);
-        }
-
-        // Продолжить как гость
-        function continueAsGuest() {
-            localStorage.setItem('station_user', JSON.stringify({
-                isGuest: true,
-                nickname: 'Гость'
-            }));
-            window.location.href = 'main.html';
         }
 
         // Перемещение между полями пароля
@@ -367,17 +367,19 @@
             
             if (complete) {
                 const passwordHint = document.getElementById('passwordHint');
-                passwordHint.textContent = 'Успешно!';
-                passwordHint.classList.add('success');
                 
                 // Проверяем пароль
                 if (accounts[password]) {
+                    passwordHint.textContent = 'Успешно!';
+                    passwordHint.classList.add('success');
+                    passwordHint.classList.remove('error');
                     processSuccessfulLogin(accounts[password]);
                 } else {
                     // Неверный пароль
+                    passwordHint.textContent = 'Неверный пароль';
+                    passwordHint.classList.add('error');
+                    passwordHint.classList.remove('success');
                     setTimeout(() => {
-                        passwordHint.textContent = 'Неверный пароль';
-                        passwordHint.classList.remove('success');
                         clearPasswordFields();
                     }, 1000);
                 }
@@ -387,11 +389,15 @@
         // Обработка успешного входа
         function processSuccessfulLogin(account) {
             // Сохраняем данные пользователя
-            localStorage.setItem('station_user', JSON.stringify({
+            const userData = {
                 isGuest: false,
                 nickname: account.nickname,
-                avatar: account.avatar
-            }));
+                avatar: account.avatar,
+                userId: account.userId,
+                lastLogin: Date.now()
+            };
+            
+            localStorage.setItem('station_current_user', JSON.stringify(userData));
             
             // Показываем загрузку
             const loadingOverlay = document.getElementById('loadingOverlay');
@@ -413,7 +419,7 @@
                 field.style.color = '#171717';
             });
             document.getElementById('passwordHint').textContent = 'Ожидание ввода…';
-            document.getElementById('passwordHint').classList.remove('success');
+            document.getElementById('passwordHint').classList.remove('success', 'error');
         }
 
         // Обработка клавиш Backspace
@@ -460,6 +466,9 @@
             }
             lastTouchEnd = now;
         }, false);
+
+        // Проверяем сохраненного пользователя при загрузке
+        window.addEventListener('load', checkSavedUser);
     </script>
 </body>
 </html>
