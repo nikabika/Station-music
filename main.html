@@ -52,7 +52,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            padding: 30px 20px 100px;
+            padding: 30px 20px 120px;
             overflow-x: hidden;
             touch-action: pan-y;
         }
@@ -72,6 +72,12 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+        
+        @keyframes loadingDots {
+            0%, 20% { opacity: 0.3; }
+            50% { opacity: 1; }
+            80%, 100% { opacity: 0.3; }
         }
         
         .header {
@@ -269,22 +275,38 @@
         /* Плеер */
         .player {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: #1a1a1a;
-            padding: 15px 20px;
+            bottom: 15px;
+            left: 15px;
+            right: 15px;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 15px 20px 20px;
             display: flex;
             align-items: center;
             gap: 15px;
             z-index: 1000;
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
-            border-top: 1px solid #2a2a2a;
+            transform: translateY(150%);
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .player.active {
             transform: translateY(0);
+        }
+        
+        .player-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.7;
+            filter: blur(15px);
+            border-radius: 18px;
+            z-index: -1;
         }
         
         .player-cover {
@@ -294,7 +316,32 @@
             background-size: cover;
             background-position: center;
             flex-shrink: 0;
+            background-color: #2a2a2a;
         }
+        
+        .player-cover.loading {
+            background: #2a2a2a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .loading-dots {
+            display: flex;
+            gap: 3px;
+        }
+        
+        .loading-dot {
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            animation: loadingDots 1.4s ease-in-out infinite both;
+        }
+        
+        .loading-dot:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dot:nth-child(2) { animation-delay: -0.16s; }
+        .loading-dot:nth-child(3) { animation-delay: 0s; }
         
         .player-info {
             flex: 1;
@@ -310,6 +357,10 @@
             text-overflow: ellipsis;
         }
         
+        .player-title.loading {
+            color: #aaa;
+        }
+        
         .player-artist {
             font-size: 13px;
             color: #aaa;
@@ -322,7 +373,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
             min-width: 120px;
         }
         
@@ -354,20 +405,40 @@
         }
         
         .progress-container {
-            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
             height: 3px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 1.5px;
-            position: relative;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 0;
             cursor: pointer;
         }
         
         .progress-bar {
             height: 100%;
             background: #CC5551;
-            border-radius: 1.5px;
             width: 0%;
             transition: width 0.1s ease;
+            position: relative;
+        }
+        
+        .progress-handle {
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            background: #CC5551;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        
+        .progress-container:hover .progress-handle {
+            opacity: 1;
         }
         
         /* Секция рекомендаций */
@@ -477,7 +548,10 @@
             }
             
             .player {
-                padding: 12px 15px;
+                padding: 15px 15px 20px;
+                left: 10px;
+                right: 10px;
+                bottom: 10px;
             }
             
             .player-controls {
@@ -526,6 +600,12 @@
 
     <!-- Плеер -->
     <div class="player" id="player">
+        <div class="player-background" id="playerBackground"></div>
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar" id="progressBar">
+                <div class="progress-handle"></div>
+            </div>
+        </div>
         <div class="player-cover" id="playerCover"></div>
         <div class="player-info">
             <div class="player-title" id="playerTitle">Название песни</div>
@@ -548,9 +628,6 @@
                         <path d="M5 3L11 8L5 13V3Z"/>
                     </svg>
                 </button>
-            </div>
-            <div class="progress-container" id="progressContainer">
-                <div class="progress-bar" id="progressBar"></div>
             </div>
         </div>
     </div>
@@ -583,6 +660,7 @@
         let isPlaying = false;
         let currentSongIndex = -1;
         let progressInterval = null;
+        let isLoading = false;
 
         // Функция для обрезки текста
         function truncateText(text, maxLength = 10) {
@@ -624,7 +702,12 @@
                     currentAlbum.title = trimmedLine.replace('ALBUM:', '').trim();
                 }
                 else if (trimmedLine.startsWith('IMAGE:') && currentAlbum) {
-                    currentAlbum.image = trimmedLine.replace('IMAGE:', '').trim();
+                    let imageUrl = trimmedLine.replace('IMAGE:', '').trim();
+                    // Заменяем картинку для альбома Human
+                    if (currentAlbum.title === 'Human') {
+                        imageUrl = 'https://i.ibb.co/ksCLVVN9/IMG-7787.gif';
+                    }
+                    currentAlbum.image = imageUrl;
                 }
                 else if (trimmedLine.startsWith('SONG:') && currentAlbum) {
                     const songData = trimmedLine.replace('SONG:', '').trim();
@@ -729,6 +812,9 @@
             const songData = allSongsMap.get(songName);
             if (!songData) return;
             
+            // Показываем состояние загрузки
+            showLoadingState(songData);
+            
             // Останавливаем текущее воспроизведение
             if (currentAudio) {
                 currentAudio.pause();
@@ -739,9 +825,12 @@
             currentAudio = new Audio(songData.audioUrl);
             currentSongIndex = userSongs.findIndex(song => (song.name || song) === songName);
             
-            currentAudio.addEventListener('loadedmetadata', function() {
-                updatePlayer(songData);
-                showPlayer();
+            // Сразу обновляем интерфейс
+            updatePlayer(songData);
+            showPlayer();
+            
+            currentAudio.addEventListener('loadeddata', function() {
+                hideLoadingState();
                 playAudio();
             });
             
@@ -752,10 +841,45 @@
             currentAudio.addEventListener('ended', function() {
                 nextSong();
             });
+            
+            currentAudio.addEventListener('error', function() {
+                hideLoadingState();
+                console.error('Ошибка загрузки аудио');
+            });
+        }
+
+        // Показать состояние загрузки
+        function showLoadingState(songData) {
+            isLoading = true;
+            const playerCover = document.getElementById('playerCover');
+            const playerTitle = document.getElementById('playerTitle');
+            
+            playerCover.className = 'player-cover loading';
+            playerCover.innerHTML = `
+                <div class="loading-dots">
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                </div>
+            `;
+            
+            playerTitle.textContent = 'Загрузка...';
+            playerTitle.className = 'player-title loading';
+        }
+
+        // Скрыть состояние загрузки
+        function hideLoadingState() {
+            isLoading = false;
+            const playerCover = document.getElementById('playerCover');
+            const playerTitle = document.getElementById('playerTitle');
+            
+            playerCover.className = 'player-cover';
+            playerTitle.className = 'player-title';
         }
 
         // Обновление плеера
         function updatePlayer(songData) {
+            document.getElementById('playerBackground').style.backgroundImage = `url('${songData.image}')`;
             document.getElementById('playerCover').style.backgroundImage = `url('${songData.image}')`;
             document.getElementById('playerTitle').textContent = songData.name;
             document.getElementById('playerArtist').textContent = songData.artist;
@@ -764,11 +888,6 @@
         // Показать плеер
         function showPlayer() {
             document.getElementById('player').classList.add('active');
-        }
-
-        // Скрыть плеер
-        function hidePlayer() {
-            document.getElementById('player').classList.remove('active');
         }
 
         // Воспроизведение аудио
@@ -847,6 +966,7 @@
                 const rect = this.getBoundingClientRect();
                 const percent = (e.clientX - rect.left) / rect.width;
                 currentAudio.currentTime = percent * currentAudio.duration;
+                updateProgress();
             }
         });
 
