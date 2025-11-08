@@ -1,14 +1,14 @@
-artist: Three Days Grace
+ARTIST: Three Days Grace
 ALBUM: Human
 IMAGE: https://i.ibb.co/kgS1djYn/IMG-7778.png
+SONG: Human Race - https://dl.dropboxusercontent.com/scl/fi/pagm193d858en4h0xq2d5/Human-Race-Three-Days-Grace.mp3?rlkey=lmqj49dcz1tqxiq4xels3losj&st=lsspisox
+SONG: Painkiller - https://dl.dropboxusercontent.com/scl/fi/vs8mjwxw4xnfhfr4t4mhn/Painkiller-Three-Days-Grace.mp3?rlkey=ysm40hmp51w0cvdpjj87wz5i4&st=3bpwuc0i
+SONG: Fallen Angel - https://dl.dropboxusercontent.com/scl/fi/u6dn5mog6mdsva1o1nzxw/Fallen-Angel-Three-Days-Grace.mp3?rlkey=nqsxr3zecohakb8w6xvx2nptf&st=a9bab3gc
+SONG: I Am Machine - https://dl.dropboxusercontent.com/scl/fi/91zatwznw6q2ve99ea5xf/I-Am-Machine-Three-Days-Grace.mp3?rlkey=gt4sup598avdenkgbjdc8666l&st=hvah6l0f
 SONG: Car Crash - https://dl.dropboxusercontent.com/scl/fi/epjripex3k18fyiw8jehn/Car-Crash-Three-Days-Grace.mp3?rlkey=1hh4c0k1bh8a8twndaf6g0z0m&st=hmnbbok8
 SONG: One Too Many - https://dl.dropboxusercontent.com/scl/fi/2k08901put3wiwgik9c8a/One-Too-Many-Three-Days-Grace.mp3?rlkey=pbb90efwn0nuto0ec9jr2lu1y&st=qx3dzfkz
 SONG: So What - https://dl.dropboxusercontent.com/scl/fi/k6si6csifi6vzlorqzcrw/So-What-Three-Days-Grace.mp3?rlkey=nvtlq2tegptdhs8lwrtu9jv0o&st=995qsjba
 SONG: Tell Me Why - https://dl.dropboxusercontent.com/scl/fi/ihgsq6wis7i09bghgz3yk/Tell-Me-Why-Three-Days-Grace.mp3?rlkey=lu6g9ue2sgdmbqmyquk3f7jkc&st=aehvr9wb
-SONG: Landmine - https://dl.dropboxusercontent.com/scl/fi/053to3k2uy327qibuzj0s/Three-Days-Grace-Landmine.mp3?rlkey=d6wd0wzj4glbtlqj92vbe3h67&st=iaq2lsn9
-SONG: Nothing's Fair In Love and War - https://dl.dropboxusercontent.com/scl/fi/p2p3wcs0gv77d45tux55w/Three-Days-Grace-Nothing-s-Fair-In-Love-and-War.mp3?rlkey=dxgyw9i9zr9hobauma5abuikd&st=3wb0yrj2
-SONG: The End Is Not The Answer - https://dl.dropboxusercontent.com/scl/fi/3m1s0mvtu25b4gwtkzvtq/Three-Days-Grace-The-End-Is-Not-The-Answer.mp3?rlkey=rrd50mirg94w5t0bhe0ygwvvb&st=d4fxnqvg
-SONG: The Real You - https://dl.dropboxusercontent.com/scl/fi/o1hrj1q73wt3ehv5qblj7/Three-Days-Grace-The-Real-You.mp3?rlkey=nzasd2gqm3h2gkkn84nhot9c1&st=cs9t2q4z
 
 ARTIST: Three Days Grace
 ALBUM: Alienation
@@ -22,8 +22,10 @@ SONG: Alienation - https://dl.dropboxusercontent.com/scl/fi/5tgd5u491y9tppdo5nnf
 SONG: Never Ordinary - https://dl.dropboxusercontent.com/scl/fi/kgbuicc7y136dffaltav5/Never-Ordinary.mp3?rlkey=5lj33zv9jyd300vhyjxiswt5l&st=dopboyfc
 SONG: Deathwish - https://dl.dropboxusercontent.com/scl/fi/11f5r9kvopfmqkvkjz7l5/Deathwish.mp3?rlkey=osovnw8yz739yu1bjjjo42hiu&st=7lb8a45p
 SONG: Don't Wanna Go Home Tonight - https://dl.dropboxusercontent.com/scl/fi/ujwmd84lzm7q50ytek8rz/Don-t-Wanna-Go-Home-Tonight.mp3?rlkey=d8k3pzwxuvsvmu2a9qalswze2&st=zyw3k50e
-SONG: Another Relapse - https://dl.dropboxusercontent.com/scl/fi/h81ot4vljiw7m8437tcan/In-Cold-Blood.mp3?rlkey=31esed55a1lxze6048z17i1vu&st=4ubkx51u
-SONG: The Power - https://dl.dropboxusercontent.com/scl/fi/vik5c14g3vunznw17jgo4/The-Power.mp3?rlkey=8jwn27qvvno0snc3xbvoucy8d&st=onscnuip
+SONG: The Power - https://dl.dropboxusercontent.com/scl/fi/p2p3wcs0gv77d45tux55w/Three-Days-Grace-Nothing-s-Fair-In-Love-and-War.mp3?rlkey=dxgyw9i9zr9hobauma5abuikd&st=3wb0yrj2
+SONG: Another Relapse - https://dl.dropboxusercontent.com/scl/fi/3m1s0mvtu25b4gwtkzvtq/Three-Days-Grace-The-End-Is-Not-The-Answer.mp3?rlkey=rrd50mirg94w5t0bhe0ygwvvb&st=d4fxnqvg
+SONG: Landmine - https://dl.dropboxusercontent.com/scl/fi/053to3k2uy327qibuzj0s/Three-Days-Grace-Landmine.mp3?rlkey=d6wd0wzj4glbtlqj92vbe3h67&st=iaq2lsn9
+SONG: The Real You - https://dl.dropboxusercontent.com/scl/fi/o1hrj1q73wt3ehv5qblj7/Three-Days-Grace-The-Real-You.mp3?rlkey=nzasd2gqm3h2gkkn84nhot9c1&st=cs9t2q4z
 
 ARTIST: Eminem
 ALBUM: The Eminem Show
