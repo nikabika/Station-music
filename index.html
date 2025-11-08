@@ -74,7 +74,7 @@
             font-family: 'New Rocker', cursive;
             font-size: 32px;
             color: white;
-            font-weight: 400;
+            fontWeight: 400;
         }
         
         .avatar-circle {
@@ -126,23 +126,26 @@
         
         .album-card {
             flex: 0 0 auto;
-            width: 160px;
+            width: 170px; /* 160px + 5px с каждой стороны */
+        }
+        
+        .album-container {
+            background: rgba(26, 26, 26, 0.9);
+            border-radius: 18px;
+            padding: 5px;
         }
         
         .album-cover {
             width: 160px;
             height: 160px;
-            border-radius: 18px;
+            border-radius: 15px; /* 18px - 3px */
             background-size: cover;
             background-position: center;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
         
         .album-info {
-            background: rgba(26, 26, 26, 0.9);
-            border-radius: 15px;
-            padding: 12px 10px;
-            margin: 0 3px;
+            padding: 0 8px 12px;
         }
         
         .album-title {
@@ -150,12 +153,18 @@
             margin-bottom: 4px;
             font-size: 14px;
             line-height: 1.3;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         .album-artist {
             font-size: 12px;
             color: #aaa;
             line-height: 1.3;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         /* Футер (не закрепленный) */
@@ -178,7 +187,7 @@
         
         @media (max-width: 480px) {
             .album-card {
-                width: 140px;
+                width: 150px; /* 140px + 5px с каждой стороны */
             }
             
             .album-cover {
@@ -187,7 +196,7 @@
             }
             
             .album-info {
-                padding: 10px 8px;
+                padding: 0 6px 10px;
             }
             
             .album-title {
@@ -265,6 +274,14 @@
         // Структуры данных
         let albums = [];
 
+        // Функция для обрезки текста
+        function truncateText(text, maxLength = 10) {
+            if (text.length > maxLength) {
+                return text.substring(0, maxLength) + '…';
+            }
+            return text;
+        }
+
         // Загрузка и парсинг songs.txt
         async function loadSongs() {
             try {
@@ -330,10 +347,12 @@
                 const albumElement = document.createElement('div');
                 albumElement.className = 'album-card';
                 albumElement.innerHTML = `
-                    <div class="album-cover" style="background-image: url('${album.image}')"></div>
-                    <div class="album-info">
-                        <div class="album-title">${album.title}</div>
-                        <div class="album-artist">${album.artist}</div>
+                    <div class="album-container">
+                        <div class="album-cover" style="background-image: url('${album.image}')"></div>
+                        <div class="album-info">
+                            <div class="album-title" title="${album.title}">${truncateText(album.title)}</div>
+                            <div class="album-artist" title="${album.artist}">${truncateText(album.artist)}</div>
+                        </div>
                     </div>
                 `;
                 
