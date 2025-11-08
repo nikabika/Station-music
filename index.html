@@ -25,7 +25,7 @@
         .radio-subtitle {
             font-size: 24px;
             color: white;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             font-weight: 600;
             align-self: flex-start;
         }
@@ -34,9 +34,8 @@
             display: flex;
             align-items: flex-start;
             gap: 20px;
-            max-width: 400px;
             width: 100%;
-            margin: 0 auto;
+            margin-bottom: 40px;
         }
         
         .cover-image {
@@ -71,40 +70,158 @@
             line-height: 1.3;
         }
         
-        .listen-btn {
-            background-color: #1a1a1a;
+        /* Секция плейлиста */
+        .playlist-section {
+            margin-top: 20px;
+        }
+        
+        .playlist-subtitle {
+            font-size: 24px;
             color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 14px;
+            margin-bottom: 25px;
             font-weight: 600;
-            border-radius: 18px;
-            cursor: pointer;
-            font-family: 'Montserrat', sans-serif;
-            transition: all 0.2s ease;
-            height: 40px;
-            min-width: 100px;
-            flex-shrink: 0;
-            align-self: flex-end;
-            margin-top: auto;
         }
         
-        .listen-btn:hover {
-            background-color: #BD4E36;
-        }
-        
-        .content-wrapper {
+        .playlist-empty {
             display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+        
+        .playlist-text {
+            font-size: 16px;
+            color: #aaa;
+            text-align: center;
+        }
+        
+        /* Секция рекомендаций */
+        .recommendations-section {
+            margin-top: 30px;
+        }
+        
+        .recommendations-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        
+        .recommendations-title {
+            font-size: 24px;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .chevron {
+            width: 20px;
+            height: 20px;
+            opacity: 0.7;
+            transition: transform 0.3s ease;
+        }
+        
+        .chevron.down {
+            transform: rotate(90deg);
+        }
+        
+        .recommendations-container {
+            display: none;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .recommendations-container.active {
+            display: block;
+        }
+        
+        .songs-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .song-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            background: rgba(26, 26, 26, 0.6);
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+        
+        .song-cover {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            background-size: cover;
+            background-position: center;
+            flex-shrink: 0;
+        }
+        
+        .song-name {
             flex: 1;
-            gap: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .heart-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            padding: 5px;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .heart-btn.liked {
+            color: #e74c3c;
+        }
+        
+        .heart-icon {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .load-more {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: none;
+            border: 1px solid #333;
+            color: #aaa;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.2s ease;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .load-more:hover {
+            background: #1a1a1a;
+        }
+        
+        .reload-icon {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.3s ease;
+        }
+        
+        .load-more.loading .reload-icon {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
         
         @media (max-width: 480px) {
-            .player-center {
-                gap: 15px;
-                max-width: 100%;
-            }
-            
             .cover-image {
                 width: 80px;
                 height: 80px;
@@ -118,16 +235,13 @@
                 font-size: 13px;
             }
             
-            .listen-btn {
-                padding: 8px 16px;
-                height: 36px;
-                min-width: 90px;
-                font-size: 13px;
+            .song-cover {
+                width: 40px;
+                height: 40px;
             }
             
-            .radio-subtitle {
-                font-size: 22px;
-                margin-bottom: 25px;
+            .song-name {
+                font-size: 13px;
             }
         }
     </style>
@@ -135,23 +249,51 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Секция радио -->
     <div class="radio-subtitle">Радио</div>
-    
     <div class="player-center">
         <div class="cover-image" id="coverImage"></div>
-        <div class="content-wrapper">
-            <div class="track-info">
-                <div class="track-name" id="trackName">Загрузка...</div>
-                <div class="track-artist" id="trackArtist">Загрузка...</div>
-            </div>
-            <button class="listen-btn" id="listenBtn">Слушать</button>
+        <div class="track-info">
+            <div class="track-name" id="trackName">Загрузка...</div>
+            <div class="track-artist" id="trackArtist">Загрузка...</div>
+        </div>
+    </div>
+
+    <!-- Секция плейлиста -->
+    <div class="playlist-section">
+        <div class="playlist-subtitle">Плейлист</div>
+        <div class="playlist-empty">
+            <div class="playlist-text">Плейлист пуст…</div>
+        </div>
+    </div>
+
+    <!-- Секция рекомендаций -->
+    <div class="recommendations-section">
+        <div class="recommendations-header" id="recommendationsHeader">
+            <div class="recommendations-title">Рекомендуем</div>
+            <svg class="chevron" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+            </svg>
+        </div>
+        
+        <div class="recommendations-container" id="recommendationsContainer">
+            <div class="songs-grid" id="songsGrid"></div>
+            <button class="load-more" id="loadMoreBtn">
+                <svg class="reload-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+                </svg>
+                Загрузить еще
+            </button>
         </div>
     </div>
 
     <script>
         // Массив для хранения всех песен
         let allSongs = [];
-        let currentAudio = null;
+        let displayedSongs = [];
+        let currentDisplayCount = 0;
+        const SONGS_PER_LOAD = 15;
+        let recommendationsOpen = false;
 
         // Функция для загрузки и парсинга songs.txt
         async function loadSongs() {
@@ -160,6 +302,7 @@
                 const text = await response.text();
                 parseSongs(text);
                 selectRandomSong();
+                shuffleSongs();
             } catch (error) {
                 console.error('Ошибка загрузки songs.txt:', error);
                 document.getElementById('trackName').textContent = 'Ошибка загрузки';
@@ -175,20 +318,19 @@
             for (const line of lines) {
                 const trimmedLine = line.trim();
                 
-                if (!trimmedLine) continue; // Пропускаем пустые строки
+                if (!trimmedLine) continue;
                 
-                // Если строка не содержит дефисов - это название группы
                 if (!trimmedLine.includes(' - ')) {
                     currentArtist = trimmedLine;
                 } else {
-                    // Это строка с песней
                     const parts = trimmedLine.split(' - ');
                     if (parts.length === 3) {
                         const song = {
                             name: parts[0].trim(),
                             audioUrl: parts[1].trim(),
                             imageUrl: parts[2].trim(),
-                            artist: currentArtist
+                            artist: currentArtist,
+                            liked: false
                         };
                         allSongs.push(song);
                     }
@@ -196,7 +338,16 @@
             }
         }
 
-        // Функция случайного выбора песни
+        // Перемешивание песен для рекомендаций
+        function shuffleSongs() {
+            displayedSongs = [...allSongs];
+            for (let i = displayedSongs.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [displayedSongs[i], displayedSongs[j]] = [displayedSongs[j], displayedSongs[i]];
+            }
+        }
+
+        // Функция случайного выбора песни для радио
         function selectRandomSong() {
             if (allSongs.length === 0) {
                 document.getElementById('trackName').textContent = 'Нет песен';
@@ -207,62 +358,107 @@
             const randomIndex = Math.floor(Math.random() * allSongs.length);
             const randomSong = allSongs[randomIndex];
             
-            // Обновляем интерфейс
             document.getElementById('trackName').textContent = randomSong.name;
             document.getElementById('trackArtist').textContent = randomSong.artist;
             document.getElementById('coverImage').style.backgroundImage = `url('${randomSong.imageUrl}')`;
-            
-            // Обновляем обработчик кнопки
-            const listenBtn = document.getElementById('listenBtn');
-            listenBtn.onclick = function() {
-                playSong(randomSong.audioUrl);
-            };
         }
 
-        // Функция воспроизведения песни
-        function playSong(audioUrl) {
-            // Останавливаем предыдущее воспроизведение
-            if (currentAudio) {
-                currentAudio.pause();
-                currentAudio = null;
+        // Загрузка песен для рекомендаций
+        function loadRecommendationSongs() {
+            const songsGrid = document.getElementById('songsGrid');
+            const startIndex = currentDisplayCount;
+            const endIndex = Math.min(startIndex + SONGS_PER_LOAD, displayedSongs.length);
+            
+            for (let i = startIndex; i < endIndex; i++) {
+                const song = displayedSongs[i];
+                const songElement = createSongElement(song, i);
+                songsGrid.appendChild(songElement);
+                
+                // Анимация появления
+                setTimeout(() => {
+                    songElement.style.opacity = '1';
+                    songElement.style.transform = 'translateY(0)';
+                }, (i - startIndex) * 50);
             }
             
-            // Создаем новый аудио элемент
-            currentAudio = new Audio(audioUrl);
-            currentAudio.play().catch(error => {
-                console.error('Ошибка воспроизведения:', error);
-                alert('Не удалось воспроизвести песню. Проверьте ссылку.');
-            });
-            
-            // Обновляем текст кнопки
-            document.getElementById('listenBtn').textContent = 'Стоп';
-            
-            // Меняем обработчик на остановку
-            document.getElementById('listenBtn').onclick = function() {
-                stopSong();
-            };
+            currentDisplayCount = endIndex;
+            updateLoadMoreButton();
         }
 
-        // Функция остановки песни
-        function stopSong() {
-            if (currentAudio) {
-                currentAudio.pause();
-                currentAudio = null;
-            }
+        // Создание элемента песни
+        function createSongElement(song, index) {
+            const songElement = document.createElement('div');
+            songElement.className = 'song-item';
+            songElement.style.opacity = '0';
+            songElement.style.transform = 'translateY(10px)';
+            songElement.style.transition = 'all 0.3s ease';
             
-            // Возвращаем текст кнопки
-            document.getElementById('listenBtn').textContent = 'Слушать';
+            songElement.innerHTML = `
+                <div class="song-cover" style="background-image: url('${song.imageUrl}')"></div>
+                <div class="song-name">${song.name}</div>
+                <button class="heart-btn ${song.liked ? 'liked' : ''}" data-index="${index}">
+                    <svg class="heart-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                </button>
+            `;
             
-            // Возвращаем обработчик на воспроизведение
-            const currentSong = allSongs.find(song => 
-                document.getElementById('trackName').textContent === song.name
-            );
-            if (currentSong) {
-                document.getElementById('listenBtn').onclick = function() {
-                    playSong(currentSong.audioUrl);
-                };
+            return songElement;
+        }
+
+        // Обновление кнопки "Загрузить еще"
+        function updateLoadMoreButton() {
+            const loadMoreBtn = document.getElementById('loadMoreBtn');
+            if (currentDisplayCount >= displayedSongs.length) {
+                loadMoreBtn.style.display = 'none';
+            } else {
+                loadMoreBtn.style.display = 'flex';
             }
         }
+
+        // Обработчики событий
+        document.getElementById('recommendationsHeader').addEventListener('click', function() {
+            const container = document.getElementById('recommendationsContainer');
+            const chevron = this.querySelector('.chevron');
+            
+            recommendationsOpen = !recommendationsOpen;
+            
+            if (recommendationsOpen) {
+                container.classList.add('active');
+                chevron.classList.add('down');
+                if (currentDisplayCount === 0) {
+                    loadRecommendationSongs();
+                }
+            } else {
+                container.classList.remove('active');
+                chevron.classList.remove('down');
+            }
+        });
+
+        document.getElementById('loadMoreBtn').addEventListener('click', function() {
+            this.classList.add('loading');
+            setTimeout(() => {
+                loadRecommendationSongs();
+                this.classList.remove('loading');
+            }, 500);
+        });
+
+        // Обработчик для лайков
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.heart-btn')) {
+                const heartBtn = e.target.closest('.heart-btn');
+                const songIndex = parseInt(heartBtn.getAttribute('data-index'));
+                const song = displayedSongs[songIndex];
+                
+                song.liked = !song.liked;
+                heartBtn.classList.toggle('liked', song.liked);
+                
+                if (song.liked) {
+                    // Добавляем в медиатеку (можно сохранять в localStorage)
+                    console.log('Добавлено в медиатеку:', song.name);
+                }
+            }
+        });
 
         // Загружаем песни при загрузке страницы
         window.addEventListener('load', loadSongs);
