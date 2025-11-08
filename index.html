@@ -42,12 +42,25 @@
             touch-action: pan-y;
         }
         
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
         .radio-subtitle {
             font-size: 24px;
             color: white;
-            margin-bottom: 20px;
             font-weight: 600;
-            align-self: flex-start;
+        }
+        
+        .avatar-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #2a2a2a;
+            flex-shrink: 0;
         }
         
         /* Секция радио */
@@ -65,11 +78,17 @@
         .cover-image {
             width: 100px;
             height: 100px;
-            background: #1a1a1a;
             border-radius: 18px;
             flex-shrink: 0;
-            background-size: cover;
-            background-position: center;
+            background: linear-gradient(to bottom, #BE5851, #8A2BE2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'New Rocker', cursive;
+            font-size: 18px;
+            color: white;
+            text-align: center;
+            padding: 10px;
         }
         
         .track-info {
@@ -92,6 +111,34 @@
             white-space: normal;
             word-wrap: break-word;
             line-height: 1.3;
+        }
+        
+        .listen-btn {
+            background-color: #1a1a1a;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.2s ease;
+            height: 32px;
+            min-width: 80px;
+            flex-shrink: 0;
+            align-self: flex-end;
+            margin-top: auto;
+        }
+        
+        .listen-btn:hover {
+            background-color: #BE5851;
+        }
+        
+        .content-wrapper {
+            display: flex;
+            flex: 1;
+            gap: 20px;
         }
         
         /* Секция плейлиста */
@@ -168,10 +215,109 @@
             color: #aaa;
         }
         
+        /* Модальное окно альбома */
+        .album-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #121212;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .album-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .album-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px 20px 30px;
+            position: relative;
+        }
+        
+        .album-cover-large {
+            width: 250px;
+            height: 250px;
+            margin-bottom: 25px;
+            border-radius: 20px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .album-info {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .album-title-large {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .album-artist-large {
+            font-size: 18px;
+            color: #aaa;
+        }
+        
+        .songs-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 20px 40px;
+        }
+        
+        .song-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            margin-bottom: 8px;
+            border-radius: 12px;
+        }
+        
+        .song-number {
+            width: 24px;
+            color: #aaa;
+            font-size: 14px;
+            margin-right: 15px;
+        }
+        
+        .song-title {
+            flex: 1;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 30px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
         @media (max-width: 480px) {
             .cover-image {
                 width: 80px;
                 height: 80px;
+                font-size: 14px;
             }
             
             .track-name {
@@ -190,20 +336,33 @@
                 width: 120px;
                 height: 120px;
             }
+            
+            .album-cover-large {
+                width: 200px;
+                height: 200px;
+            }
         }
     </style>
     
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=New+Rocker&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Шапка -->
+    <div class="header-section">
+        <div class="radio-subtitle">Радио</div>
+        <div class="avatar-circle"></div>
+    </div>
+
     <!-- Секция радио -->
     <div class="radio-section">
-        <div class="radio-subtitle">Радио</div>
         <div class="player-center">
-            <div class="cover-image" id="coverImage"></div>
-            <div class="track-info">
-                <div class="track-name" id="trackName">Загрузка...</div>
-                <div class="track-artist" id="trackArtist">Загрузка...</div>
+            <div class="cover-image">RADIO</div>
+            <div class="content-wrapper">
+                <div class="track-info">
+                    <div class="track-name">Радио</div>
+                    <div class="track-artist">STATION</div>
+                </div>
+                <button class="listen-btn">Слушать</button>
             </div>
         </div>
     </div>
@@ -219,34 +378,23 @@
     <!-- Секция рекомендаций -->
     <div class="recommendations-section">
         <div class="recommendations-subtitle">Рекомендуем</div>
-        <div class="albums-scroll">
-            <!-- Альбом 1 -->
-            <div class="album-card">
-                <div class="album-cover" style="background-image: url('https://i.ibb.co/kgS1djYn/IMG-7778.png')"></div>
-                <div class="album-title">Human</div>
-                <div class="album-artist">Three Days Grace</div>
+        <div class="albums-scroll" id="albumsScroll">
+            <!-- Альбомы будут добавлены через JS -->
+        </div>
+    </div>
+
+    <!-- Модальное окно альбома -->
+    <div class="album-modal" id="albumModal">
+        <button class="close-btn" id="closeModal">×</button>
+        <div class="album-header">
+            <div class="album-cover-large" id="modalAlbumCover"></div>
+            <div class="album-info">
+                <div class="album-title-large" id="modalAlbumTitle"></div>
+                <div class="album-artist-large" id="modalAlbumArtist"></div>
             </div>
-            
-            <!-- Альбом 2 -->
-            <div class="album-card">
-                <div class="album-cover" style="background-image: url('https://i.ibb.co/jPpmsv43/IMG-7788.gif')"></div>
-                <div class="album-title">Alienation</div>
-                <div class="album-artist">Three Days Grace</div>
-            </div>
-            
-            <!-- Альбом 3 -->
-            <div class="album-card">
-                <div class="album-cover" style="background-image: url('https://i.ibb.co/cXD2fXZf/IMG-7817.jpg')"></div>
-                <div class="album-title">The Eminem Show</div>
-                <div class="album-artist">Eminem</div>
-            </div>
-            
-            <!-- Альбом 4 -->
-            <div class="album-card">
-                <div class="album-cover" style="background-image: url('https://i.ibb.co/JFsxnD2F/IMG-7777.png')"></div>
-                <div class="album-title">Swan Songs</div>
-                <div class="album-artist">Hollywood Undead</div>
-            </div>
+        </div>
+        <div class="songs-container" id="songsContainer">
+            <!-- Список песен будет добавлен через JS -->
         </div>
     </div>
 
@@ -274,38 +422,34 @@
             lastTouchEnd = now;
         }, false);
 
-        // Массив для хранения всех песен
         let allSongs = [];
+        let albumsData = {};
 
-        // Функция для загрузки и парсинга songs.txt
+        // Загрузка и парсинг songs.txt
         async function loadSongs() {
             try {
                 const response = await fetch('songs.txt');
                 const text = await response.text();
                 parseSongs(text);
-                selectRandomSong();
+                renderAlbums();
             } catch (error) {
                 console.error('Ошибка загрузки songs.txt:', error);
-                document.getElementById('trackName').textContent = 'Ошибка загрузки';
-                document.getElementById('trackArtist').textContent = 'Проверьте файл songs.txt';
             }
         }
 
-        // Функция парсинга songs.txt
+        // Парсинг songs.txt и группировка по альбомам
         function parseSongs(text) {
             const lines = text.split('\n');
             let currentArtist = '';
+            let currentAlbum = null;
             
             for (const line of lines) {
                 const trimmedLine = line.trim();
+                if (!trimmedLine) continue;
                 
-                if (!trimmedLine) continue; // Пропускаем пустые строки
-                
-                // Если строка не содержит дефисов - это название группы
                 if (!trimmedLine.includes(' - ')) {
                     currentArtist = trimmedLine;
                 } else {
-                    // Это строка с песней
                     const parts = trimmedLine.split(' - ');
                     if (parts.length === 3) {
                         const song = {
@@ -315,29 +459,91 @@
                             artist: currentArtist
                         };
                         allSongs.push(song);
+                        
+                        // Группируем по обложкам (альбомам)
+                        if (!albumsData[song.imageUrl]) {
+                            albumsData[song.imageUrl] = {
+                                title: getAlbumTitle(song.name, song.artist),
+                                artist: song.artist,
+                                songs: [],
+                                imageUrl: song.imageUrl
+                            };
+                        }
+                        albumsData[song.imageUrl].songs.push(song);
                     }
                 }
             }
         }
 
-        // Функция случайного выбора песни
-        function selectRandomSong() {
-            if (allSongs.length === 0) {
-                document.getElementById('trackName').textContent = 'Нет песен';
-                document.getElementById('trackArtist').textContent = 'Добавьте в songs.txt';
-                return;
-            }
-            
-            const randomIndex = Math.floor(Math.random() * allSongs.length);
-            const randomSong = allSongs[randomIndex];
-            
-            // Обновляем интерфейс
-            document.getElementById('trackName').textContent = randomSong.name;
-            document.getElementById('trackArtist').textContent = randomSong.artist;
-            document.getElementById('coverImage').style.backgroundImage = `url('${randomSong.imageUrl}')`;
+        // Определение названия альбома
+        function getAlbumTitle(songName, artist) {
+            const albumTitles = {
+                'https://i.ibb.co/kgS1djYn/IMG-7778.png': 'Human',
+                'https://i.ibb.co/jPpmsv43/IMG-7788.gif': 'Alienation', 
+                'https://i.ibb.co/cXD2fXZf/IMG-7817.jpg': 'The Eminem Show',
+                'https://i.ibb.co/JFsxnD2F/IMG-7777.png': 'Swan Songs'
+            };
+            return albumTitles[imageUrl] || `${artist} Album`;
         }
 
-        // Загружаем песни при загрузке страницы
+        // Рендер альбомов
+        function renderAlbums() {
+            const albumsScroll = document.getElementById('albumsScroll');
+            albumsScroll.innerHTML = '';
+            
+            Object.values(albumsData).forEach(album => {
+                const albumElement = document.createElement('div');
+                albumElement.className = 'album-card';
+                albumElement.innerHTML = `
+                    <div class="album-cover" style="background-image: url('${album.imageUrl}')"></div>
+                    <div class="album-title">${album.title}</div>
+                    <div class="album-artist">${album.artist}</div>
+                `;
+                
+                albumElement.addEventListener('click', () => openAlbumModal(album));
+                albumsScroll.appendChild(albumElement);
+            });
+        }
+
+        // Открытие модального окна альбома
+        function openAlbumModal(album) {
+            document.getElementById('modalAlbumCover').style.backgroundImage = `url('${album.imageUrl}')`;
+            document.getElementById('modalAlbumTitle').textContent = album.title;
+            document.getElementById('modalAlbumArtist').textContent = album.artist;
+            
+            const songsContainer = document.getElementById('songsContainer');
+            songsContainer.innerHTML = '';
+            
+            album.songs.forEach((song, index) => {
+                const songElement = document.createElement('div');
+                songElement.className = 'song-item';
+                songElement.innerHTML = `
+                    <div class="song-number">${index + 1}</div>
+                    <div class="song-title">${song.name}</div>
+                `;
+                songsContainer.appendChild(songElement);
+            });
+            
+            document.getElementById('albumModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Закрытие модального окна
+        document.getElementById('closeModal').addEventListener('click', closeAlbumModal);
+        
+        function closeAlbumModal() {
+            document.getElementById('albumModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Закрытие по клику на фон
+        document.getElementById('albumModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAlbumModal();
+            }
+        });
+
+        // Загрузка при старте
         window.addEventListener('load', loadSongs);
     </script>
 </body>
