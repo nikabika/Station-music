@@ -32,7 +32,7 @@
         
         .player-center {
             display: flex;
-            align-items: flex-end;
+            align-items: flex-start;
             gap: 20px;
             max-width: 400px;
             width: 100%;
@@ -45,6 +45,8 @@
             background: #1a1a1a;
             border-radius: 18px;
             flex-shrink: 0;
+            background-size: cover;
+            background-position: center;
         }
         
         .track-info {
@@ -83,10 +85,18 @@
             height: 40px;
             min-width: 100px;
             flex-shrink: 0;
+            align-self: flex-end;
+            margin-top: auto;
         }
         
         .listen-btn:hover {
             background-color: #BD4E36;
+        }
+        
+        .content-wrapper {
+            display: flex;
+            flex: 1;
+            gap: 20px;
         }
         
         @media (max-width: 480px) {
@@ -128,16 +138,134 @@
     <div class="radio-subtitle">Радио</div>
     
     <div class="player-center">
-        <div class="cover-image"></div>
-        <div class="track-info">
-            <div class="track-name">Song name</div>
-            <div class="track-artist">Unknown</div>
+        <div class="cover-image" id="coverImage"></div>
+        <div class="content-wrapper">
+            <div class="track-info">
+                <div class="track-name" id="trackName">Загрузка...</div>
+                <div class="track-artist" id="trackArtist">Загрузка...</div>
+            </div>
+            <button class="listen-btn" id="listenBtn">Слушать</button>
         </div>
-        <button class="listen-btn">Слушать</button>
     </div>
 
     <script>
-        // Скрипт для загрузки данных из songs.txt будет добавлен позже
+        // Массив для хранения всех песен
+        let allSongs = [];
+        let currentAudio = null;
+
+        // Функция для загрузки и парсинга songs.txt
+        async function loadSongs() {
+            try {
+                const response = await fetch('songs.txt');
+                const text = await response.text();
+                parseSongs(text);
+                selectRandomSong();
+            } catch (error) {
+                console.error('Ошибка загрузки songs.txt:', error);
+                document.getElementById('trackName').textContent = 'Ошибка загрузки';
+                document.getElementById('trackArtist').textContent = 'Проверьте файл songs.txt';
+            }
+        }
+
+        // Функция парсинга songs.txt
+        function parseSongs(text) {
+            const lines = text.split('\n');
+            let currentArtist = '';
+            
+            for (const line of lines) {
+                const trimmedLine = line.trim();
+                
+                if (!trimmedLine) continue; // Пропускаем пустые строки
+                
+                // Если строка не содержит дефисов - это название группы
+                if (!trimmedLine.includes(' - ')) {
+                    currentArtist = trimmedLine;
+                } else {
+                    // Это строка с песней
+                    const parts = trimmedLine.split(' - ');
+                    if (parts.length === 3) {
+                        const song = {
+                            name: parts[0].trim(),
+                            audioUrl: parts[1].trim(),
+                            imageUrl: parts[2].trim(),
+                            artist: currentArtist
+                        };
+                        allSongs.push(song);
+                    }
+                }
+            }
+        }
+
+        // Функция случайного выбора песни
+        function selectRandomSong() {
+            if (allSongs.length === 0) {
+                document.getElementById('trackName').textContent = 'Нет песен';
+                document.getElementById('trackArtist').textContent = 'Добавьте в songs.txt';
+                return;
+            }
+            
+            const randomIndex = Math.floor(Math.random() * allSongs.length);
+            const randomSong = allSongs[randomIndex];
+            
+            // Обновляем интерфейс
+            document.getElementById('trackName').textContent = randomSong.name;
+            document.getElementById('trackArtist').textContent = randomSong.artist;
+            document.getElementById('coverImage').style.backgroundImage = `url('${randomSong.imageUrl}')`;
+            
+            // Обновляем обработчик кнопки
+            const listenBtn = document.getElementById('listenBtn');
+            listenBtn.onclick = function() {
+                playSong(randomSong.audioUrl);
+            };
+        }
+
+        // Функция воспроизведения песни
+        function playSong(audioUrl) {
+            // Останавливаем предыдущее воспроизведение
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio = null;
+            }
+            
+            // Создаем новый аудио элемент
+            currentAudio = new Audio(audioUrl);
+            currentAudio.play().catch(error => {
+                console.error('Ошибка воспроизведения:', error);
+                alert('Не удалось воспроизвести песню. Проверьте ссылку.');
+            });
+            
+            // Обновляем текст кнопки
+            document.getElementById('listenBtn').textContent = 'Стоп';
+            
+            // Меняем обработчик на остановку
+            document.getElementById('listenBtn').onclick = function() {
+                stopSong();
+            };
+        }
+
+        // Функция остановки песни
+        function stopSong() {
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio = null;
+            }
+            
+            // Возвращаем текст кнопки
+            document.getElementById('listenBtn').textContent = 'Слушать';
+            
+            // Возвращаем обработчик на воспроизведение
+            const currentSong = allSongs.find(song => 
+                document.getElementById('trackName').textContent === song.name
+            );
+            if (currentSong) {
+                document.getElementById('listenBtn').onclick = function() {
+                    playSong(currentSong.audioUrl);
+                };
+            }
+        }
+
+        // Загружаем песни при загрузке страницы
+        window.addEventListener('load', loadSongs);
     </script>
 </body>
 </html>
