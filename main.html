@@ -74,6 +74,17 @@
             }
         }
         
+        @keyframes removeSong {
+            to {
+                opacity: 0;
+                transform: translateX(-100%);
+                max-height: 0;
+                margin-bottom: 0;
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+        }
+        
         .header {
             animation: slideUp 0.5s ease-out 0.1s both;
         }
@@ -175,6 +186,11 @@
             transition: all 0.3s ease;
             position: relative;
             cursor: pointer;
+            overflow: hidden;
+        }
+        
+        .song-item.removing {
+            animation: removeSong 0.4s ease forwards;
         }
         
         .song-item:hover {
@@ -672,8 +688,71 @@
         }
         
         .add-btn.added {
-            color: #4CAF50;
+            color: white;
             opacity: 1;
+        }
+        
+        /* iOS-style Action Sheet */
+        .action-sheet {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .action-sheet.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .action-sheet-content {
+            background: #1c1c1e;
+            border-radius: 14px 14px 0 0;
+            margin: 0 10px 10px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .action-sheet.active .action-sheet-content {
+            transform: translateY(0);
+        }
+        
+        .action-sheet-button {
+            width: 100%;
+            padding: 16px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            text-align: center;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .action-sheet-button:active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .action-sheet-button-destructive {
+            color: #ff453a;
+        }
+        
+        .action-sheet-button-cancel {
+            border-top: 1px solid #38383a;
+            font-weight: 600;
+            margin-top: 8px;
+            border-radius: 14px;
+            background: #2c2c2e;
         }
         
         @media (max-width: 480px) {
@@ -833,6 +912,14 @@
         </div>
     </div>
 
+    <!-- iOS-style Action Sheet -->
+    <div class="action-sheet" id="actionSheet">
+        <div class="action-sheet-content">
+            <button class="action-sheet-button action-sheet-button-destructive" id="deleteSongBtn">Удалить</button>
+            <button class="action-sheet-button action-sheet-button-cancel" id="cancelActionBtn">Отмена</button>
+        </div>
+    </div>
+
     <script>
         // Проверяем авторизацию
         const userData = JSON.parse(localStorage.getItem('station_current_user'));
@@ -863,6 +950,7 @@
         let progressInterval = null;
         let isDragging = false;
         let currentAlbum = null;
+        let currentActionSong = null;
 
         // Функция для обрезки текста
         function truncateText(text, maxLength = 10) {
@@ -984,15 +1072,24 @@
                             <path d="M10.5 1.5L14.5 5.5L9.5 10.5L11 12L6 17L1 12L3 10L5.5 12.5L1.5 8.5L5.5 4.5L7 6L10.5 1.5Z"/>
                         </svg>
                     ` : ''}
-                    <div class="menu-btn">
+                    <div class="menu-btn" data-song="${songData.name}">
                         <div class="menu-dots"></div>
                     </div>
                 </div>
             `;
             
             // Добавляем обработчик клика для воспроизведения
-            songElement.addEventListener('click', () => {
-                playSong(songData.name);
+            songElement.addEventListener('click', (e) => {
+                if (!e.target.closest('.menu-btn')) {
+                    playSong(songData.name);
+                }
+            });
+            
+            // Добавляем обработчик для меню
+            const menuBtn = songElement.querySelector('.menu-btn');
+            menuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                showActionSheet(songData.name);
             });
             
             return songElement;
@@ -1002,6 +1099,59 @@
             if (count % 10 === 1 && count % 100 !== 11) return 'песня';
             if (count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 >= 20)) return 'песни';
             return 'песен';
+        }
+
+        // Показать Action Sheet
+        function showActionSheet(songName) {
+            currentActionSong = songName;
+            document.getElementById('actionSheet').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Скрыть Action Sheet
+        function hideActionSheet() {
+            document.getElementById('actionSheet').classList.remove('active');
+            document.body.style.overflow = 'auto';
+            currentActionSong = null;
+        }
+
+        // Удалить песню из медиатеки
+        function removeSongFromLibrary(songName) {
+            const songIndex = userSongs.findIndex(song => (song.name || song) === songName);
+            if (songIndex === -1) return;
+            
+            // Находим элемент песни в DOM
+            const songElements = document.querySelectorAll('.song-item');
+            const songElement = Array.from(songElements).find(el => {
+                const menuBtn = el.querySelector('.menu-btn');
+                return menuBtn && menuBtn.dataset.song === songName;
+            });
+            
+            if (songElement) {
+                // Добавляем класс для анимации удаления
+                songElement.classList.add('removing');
+                
+                // Удаляем песню из массива после анимации
+                setTimeout(() => {
+                    userSongs.splice(songIndex, 1);
+                    saveUserLibrary();
+                    renderUserLibrary();
+                    
+                    // Если удаляемая песня играет, останавливаем воспроизведение
+                    if (currentSongIndex === songIndex) {
+                        if (currentAudio) {
+                            currentAudio.pause();
+                            currentAudio = null;
+                        }
+                        document.getElementById('player').classList.remove('active');
+                    }
+                }, 400);
+            } else {
+                // Если элемент не найден, просто удаляем из массива
+                userSongs.splice(songIndex, 1);
+                saveUserLibrary();
+                renderUserLibrary();
+            }
         }
 
         // Воспроизведение песни
@@ -1022,6 +1172,9 @@
             // Создаем новый аудио элемент
             currentAudio = new Audio(songData.audioUrl);
             currentSongIndex = userSongs.findIndex(song => (song.name || song) === songName);
+            
+            // Отключаем ускорение
+            currentAudio.playbackRate = 1.0;
             
             currentAudio.addEventListener('canplaythrough', function() {
                 // Когда аудио готово, показываем картинку
@@ -1064,6 +1217,7 @@
             } else {
                 playerCover.classList.remove('loading');
                 playerCover.style.backgroundImage = `url('${songData.image}')`;
+                playerCover.style.backgroundSize = 'cover'; // Исправляем масштабирование
                 playerCover.innerHTML = '';
             }
             
@@ -1268,7 +1422,7 @@
             
             // Меняем иконку на галочку
             button.innerHTML = `
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="#4CAF50">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
                 </svg>
             `;
@@ -1353,6 +1507,23 @@
         document.getElementById('albumView').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeAlbumView();
+            }
+        });
+
+        // Обработчики Action Sheet
+        document.getElementById('deleteSongBtn').addEventListener('click', function() {
+            if (currentActionSong) {
+                removeSongFromLibrary(currentActionSong);
+            }
+            hideActionSheet();
+        });
+
+        document.getElementById('cancelActionBtn').addEventListener('click', hideActionSheet);
+
+        // Закрытие Action Sheet по клику на фон
+        document.getElementById('actionSheet').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideActionSheet();
             }
         });
 
