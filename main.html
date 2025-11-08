@@ -30,6 +30,8 @@
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out forwards;
         }
         
         ::-webkit-scrollbar {
@@ -54,6 +56,39 @@
             padding: 30px 20px;
             overflow-x: hidden;
             touch-action: pan-y;
+        }
+        
+        /* Анимации появления */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .header {
+            animation: slideUp 0.5s ease-out 0.1s both;
+        }
+        
+        .playlist-section {
+            animation: slideUp 0.5s ease-out 0.2s both;
+        }
+        
+        .recommendations-section {
+            animation: slideUp 0.5s ease-out 0.3s both;
+        }
+        
+        .footer {
+            animation: slideUp 0.5s ease-out 0.4s both;
         }
         
         /* Фиксированный хедер с разделительной линией */
@@ -129,7 +164,15 @@
         .album-card {
             flex: 0 0 auto;
             width: 170px;
+            opacity: 0;
+            transform: translateY(15px);
+            animation: slideUp 0.4s ease-out forwards;
         }
+        
+        .album-card:nth-child(1) { animation-delay: 0.4s; }
+        .album-card:nth-child(2) { animation-delay: 0.45s; }
+        .album-card:nth-child(3) { animation-delay: 0.5s; }
+        .album-card:nth-child(4) { animation-delay: 0.55s; }
         
         .album-container {
             background: rgba(26, 26, 26, 0.9);
@@ -236,9 +279,13 @@
     </div>
 
     <script>
-        // Загрузка данных пользователя
-        const userData = JSON.parse(localStorage.getItem('station_user') || '{"isGuest":true,"nickname":"Гость"}');
-        
+        // Проверяем авторизацию
+        const userData = JSON.parse(localStorage.getItem('station_current_user'));
+        if (!userData) {
+            // Если нет сохраненного пользователя, возвращаем на страницу входа
+            window.location.href = 'index.html';
+        }
+
         // Устанавливаем аватарку
         if (userData.avatar) {
             document.getElementById('userAvatar').style.backgroundImage = `url('${userData.avatar}')`;
@@ -312,9 +359,10 @@
                 return;
             }
             
-            albums.forEach(album => {
+            albums.forEach((album, index) => {
                 const albumElement = document.createElement('div');
                 albumElement.className = 'album-card';
+                albumElement.style.animationDelay = `${0.4 + (index * 0.05)}s`;
                 albumElement.innerHTML = `
                     <div class="album-container">
                         <div class="album-cover" style="background-image: url('${album.image}')"></div>
