@@ -80,20 +80,12 @@
             background: #CC5551;
             border-radius: 18px;
             flex-shrink: 0;
-            background-size: cover;
-            background-position: center;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: 'New Rocker', cursive;
             font-size: 18px;
             color: white;
-            position: relative;
-        }
-        
-        .radio-cover::after {
-            content: "RADIO";
-            position: absolute;
         }
         
         .track-info {
@@ -307,10 +299,10 @@
     <div class="radio-section">
         <div class="section-subtitle">Радио</div>
         <div class="radio-player">
-            <div class="radio-cover" id="radioCover"></div>
+            <div class="radio-cover">RADIO</div>
             <div class="track-info">
-                <div class="track-name" id="trackName">Загрузка...</div>
-                <div class="track-artist" id="trackArtist">Загрузка...</div>
+                <div class="track-name">Радио</div>
+                <div class="track-artist">STATION</div>
             </div>
         </div>
     </div>
@@ -367,7 +359,6 @@
         }, false);
 
         // Структуры данных
-        let allSongs = [];
         let albums = [];
 
         // Загрузка и парсинг songs.txt
@@ -376,12 +367,10 @@
                 const response = await fetch('songs.txt');
                 const text = await response.text();
                 parseSongs(text);
-                selectRandomSong();
                 renderAlbums();
             } catch (error) {
                 console.error('Ошибка загрузки:', error);
-                document.getElementById('trackName').textContent = 'Ошибка загрузки';
-                document.getElementById('trackArtist').textContent = 'Проверьте songs.txt';
+                document.getElementById('albumsScroll').innerHTML = '<div style="color: #aaa; text-align: center;">Ошибка загрузки альбомов</div>';
             }
         }
 
@@ -393,44 +382,46 @@
                 const trimmedLine = line.trim();
                 if (!trimmedLine) continue;
                 
-                // Новая строка с альбомом: Исполнитель - Альбом - Картинка
-                if (trimmedLine.includes(' - ') && trimmedLine.split(' - ').length === 3 && !trimmedLine.includes('http')) {
-                    const [artist, album, image] = trimmedLine.split(' - ');
+                if (trimmedLine.startsWith('ARTIST:')) {
+                    if (currentAlbum) albums.push(currentAlbum);
                     currentAlbum = {
-                        artist: artist.trim(),
-                        title: album.trim(),
-                        image: image.trim(),
+                        artist: trimmedLine.replace('ARTIST:', '').trim(),
                         songs: []
                     };
-                    albums.push(currentAlbum);
                 }
-                // Строка с песней: Название - АудиоURL
-                else if (trimmedLine.includes(' - ') && currentAlbum) {
-                    const [name, audioUrl] = trimmedLine.split(' - ');
-                    const song = {
-                        name: name.trim(),
-                        audioUrl: audioUrl.trim(),
-                        album: currentAlbum.title,
-                        artist: currentAlbum.artist,
-                        image: currentAlbum.image
-                    };
-                    currentAlbum.songs.push(song);
-                    allSongs.push(song);
+                else if (trimmedLine.startsWith('ALBUM:') && currentAlbum) {
+                    currentAlbum.title = trimmedLine.replace('ALBUM:', '').trim();
+                }
+                else if (trimmedLine.startsWith('IMAGE:') && currentAlbum) {
+                    currentAlbum.image = trimmedLine.replace('IMAGE:', '').trim();
+                }
+                else if (trimmedLine.startsWith('SONG:') && currentAlbum) {
+                    const songData = trimmedLine.replace('SONG:', '').trim();
+                    const [name, audioUrl] = songData.split(' - ');
+                    if (name && audioUrl) {
+                        currentAlbum.songs.push({
+                            name: name.trim(),
+                            audioUrl: audioUrl.trim()
+                        });
+                    }
                 }
             }
-        }
-
-        function selectRandomSong() {
-            if (allSongs.length === 0) return;
             
-            const randomSong = allSongs[Math.floor(Math.random() * allSongs.length)];
-            document.getElementById('trackName').textContent = randomSong.name;
-            document.getElementById('trackArtist').textContent = randomSong.artist;
+            // Добавляем последний альбом
+            if (currentAlbum) albums.push(currentAlbum);
+            
+            console.log('Загружено альбомов:', albums.length);
+            console.log('Альбомы:', albums);
         }
 
         function renderAlbums() {
             const container = document.getElementById('albumsScroll');
             container.innerHTML = '';
+            
+            if (albums.length === 0) {
+                container.innerHTML = '<div style="color: #aaa; text-align: center;">Нет альбомов для отображения</div>';
+                return;
+            }
             
             albums.forEach(album => {
                 const albumElement = document.createElement('div');
