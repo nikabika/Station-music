@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>STATION</title>
+    
+    <!-- Мета-теги для iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="STATION">
+    <link rel="apple-touch-icon" href="icon.png">
+    
+    <!-- Мета-теги для медиа-сессии (контроль на заблокированном экране) -->
+    <meta name="theme-color" content="#CC5551">
+    <link rel="manifest" href="manifest.json">
+    
     <style>
         * {
             margin: 0;
@@ -85,12 +96,21 @@
             }
         }
         
+        @keyframes visualizerPulse {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(1.8); }
+        }
+        
         .header {
             animation: slideUp 0.5s ease-out 0.1s both;
         }
         
         .playlist-section {
             animation: slideUp 0.5s ease-out 0.2s both;
+        }
+        
+        .radio-section {
+            animation: slideUp 0.5s ease-out 0.25s both;
         }
         
         .recommendations-section {
@@ -130,6 +150,76 @@
             flex-shrink: 0;
             background-size: cover;
             background-position: center;
+        }
+        
+        /* Секция радио */
+        .radio-section {
+            margin: 20px 0;
+        }
+        
+        .radio-card {
+            background: linear-gradient(135deg, #CC5551 0%, #8B3A3A 100%);
+            border-radius: 20px;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .radio-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" opacity="0.1"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>') center/50% no-repeat;
+        }
+        
+        .radio-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(204, 85, 81, 0.3);
+        }
+        
+        .radio-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .radio-info {
+            flex: 1;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .radio-title-main {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .radio-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .radio-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
         }
         
         /* Секция медиатеки */
@@ -377,7 +467,7 @@
             flex-direction: column;
             align-items: center;
             gap: 8px;
-            min-width: 120px;
+            min-width: 140px;
         }
         
         .controls-row {
@@ -437,6 +527,25 @@
             box-shadow: 0 0 0 4px rgba(204, 85, 81, 0.3);
         }
         
+        /* Визуализатор */
+        .player-visualizer {
+            display: flex;
+            align-items: end;
+            justify-content: center;
+            gap: 2px;
+            height: 20px;
+            width: 100%;
+            margin-top: 5px;
+        }
+        
+        .visualizer-bar {
+            width: 3px;
+            background: linear-gradient(to top, #CC5551, #FF6B6B);
+            border-radius: 2px;
+            transition: height 0.15s ease;
+            min-height: 3px;
+        }
+        
         /* Секция рекомендаций */
         .recommendations-section {
             margin-top: 40px;
@@ -457,6 +566,8 @@
             transform: translateY(15px);
             animation: slideUp 0.4s ease-out forwards;
             cursor: pointer;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
         
         .album-card:nth-child(1) { animation-delay: 0.4s; }
@@ -468,6 +579,9 @@
             background: rgba(26, 26, 26, 0.9);
             border-radius: 19.5px;
             padding: 5px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
         }
         
         .album-cover {
@@ -478,10 +592,12 @@
             background-position: center;
             margin-bottom: 10px;
             object-fit: cover;
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
         
         .album-info {
             padding: 0 8px 12px;
+            transition: transform 0.3s ease;
         }
         
         .album-title {
@@ -498,6 +614,47 @@
             font-size: 12px;
             color: #aaa;
             line-height: 1.3;
+        }
+        
+        /* Параллакс эффекты */
+        .album-card:hover {
+            transform: translateY(-8px) scale(1.03);
+        }
+        
+        .album-card:hover .album-cover {
+            transform: scale(1.08) rotateZ(1deg);
+            filter: brightness(1.1) saturate(1.2);
+        }
+        
+        .album-card:hover .album-info {
+            transform: translateY(-2px);
+        }
+        
+        .album-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, 
+                rgba(204, 85, 81, 0.1) 0%, 
+                rgba(204, 85, 81, 0) 50%,
+                rgba(102, 102, 204, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 1;
+            border-radius: 19.5px;
+        }
+        
+        .album-card:hover .album-container::before {
+            opacity: 1;
+        }
+        
+        .album-card:hover .album-container {
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.5),
+                0 5px 15px rgba(204, 85, 81, 0.3);
         }
         
         /* Футер */
@@ -790,7 +947,7 @@
             }
             
             .player-controls {
-                min-width: 100px;
+                min-width: 120px;
             }
             
             .controls-row {
@@ -816,6 +973,14 @@
                 width: 35px;
                 height: 35px;
             }
+            
+            .radio-card {
+                padding: 20px;
+            }
+            
+            .radio-title-main {
+                font-size: 18px;
+            }
         }
     </style>
     
@@ -826,6 +991,22 @@
     <div class="header">
         <div class="radio-title">STATION</div>
         <div class="avatar-circle" id="userAvatar"></div>
+    </div>
+
+    <!-- Секция радио -->
+    <div class="radio-section">
+        <div class="radio-card" id="radioCard">
+            <div class="radio-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+                </svg>
+            </div>
+            <div class="radio-info">
+                <div class="radio-title-main">СТАНЦИЯ РАДИО</div>
+                <div class="radio-subtitle">Случайные треки • Бесконечный поток</div>
+            </div>
+            <div class="radio-badge">LIVE</div>
+        </div>
     </div>
 
     <!-- Секция медиатеки -->
@@ -889,6 +1070,17 @@
                     <div class="progress-thumb" id="progressThumb"></div>
                 </div>
             </div>
+            <!-- Визуализатор -->
+            <div class="player-visualizer" id="playerVisualizer">
+                <div class="visualizer-bar"></div>
+                <div class="visualizer-bar"></div>
+                <div class="visualizer-bar"></div>
+                <div class="visualizer-bar"></div>
+                <div class="visualizer-bar"></div>
+                <div class="visualizer-bar"></div>
+                <div class="visualizer-bar"></div>
+                <div class="visualizer-bar"></div>
+            </div>
         </div>
     </div>
 
@@ -951,6 +1143,9 @@
         let isDragging = false;
         let currentAlbum = null;
         let currentActionSong = null;
+        let visualizerInterval = null;
+        let isRadioMode = false;
+        let radioPlaylist = [];
 
         // Функция для обрезки текста
         function truncateText(text, maxLength = 10) {
@@ -968,6 +1163,8 @@
                 parseSongs(text);
                 renderUserLibrary();
                 renderAlbums();
+                initVisualizer();
+                initMediaSession();
             } catch (error) {
                 console.error('Ошибка загрузки:', error);
             }
@@ -1101,6 +1298,124 @@
             return 'песен';
         }
 
+        // Визуализатор аудио
+        function initVisualizer() {
+            const bars = document.querySelectorAll('.visualizer-bar');
+            
+            function updateVisualizer() {
+                if (!isPlaying || !currentAudio) {
+                    bars.forEach(bar => {
+                        bar.style.height = '3px';
+                    });
+                    return;
+                }
+                
+                bars.forEach((bar, index) => {
+                    const baseHeight = 5;
+                    const randomBoost = Math.random() * 15;
+                    const waveEffect = Math.sin(Date.now() / 200 + index * 0.5) * 3;
+                    const finalHeight = baseHeight + randomBoost + waveEffect;
+                    
+                    bar.style.height = `${finalHeight}px`;
+                    
+                    if (finalHeight > 15) {
+                        bar.style.background = 'linear-gradient(to top, #FF6B6B, #FF9999)';
+                    } else if (finalHeight > 10) {
+                        bar.style.background = 'linear-gradient(to top, #CC5551, #FF6B6B)';
+                    } else {
+                        bar.style.background = 'linear-gradient(to top, #CC5551, #DD7777)';
+                    }
+                });
+            }
+            
+            function toggleVisualizer() {
+                if (isPlaying) {
+                    visualizerInterval = setInterval(updateVisualizer, 120);
+                } else {
+                    if (visualizerInterval) {
+                        clearInterval(visualizerInterval);
+                        visualizerInterval = null;
+                        bars.forEach(bar => {
+                            bar.style.height = '3px';
+                        });
+                    }
+                }
+            }
+            
+            document.getElementById('playPauseBtn').addEventListener('click', toggleVisualizer);
+            toggleVisualizer();
+        }
+
+        // Режим радио
+        function startRadioMode() {
+            isRadioMode = true;
+            radioPlaylist = Array.from(allSongsMap.values());
+            shuffleArray(radioPlaylist);
+            
+            if (radioPlaylist.length > 0) {
+                const randomSong = radioPlaylist[0];
+                playSong(randomSong.name);
+                showNotification('Режим радио включен');
+            }
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function playNextRadioSong() {
+            if (!isRadioMode || radioPlaylist.length === 0) return;
+            
+            const currentIndex = radioPlaylist.findIndex(song => song.name === document.getElementById('playerTitle').textContent);
+            const nextIndex = (currentIndex + 1) % radioPlaylist.length;
+            const nextSong = radioPlaylist[nextIndex];
+            
+            playSong(nextSong.name);
+        }
+
+        // iOS Media Session API (для заблокированного экрана)
+        function initMediaSession() {
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.setActionHandler('play', function() {
+                    playAudio();
+                    isPlaying = true;
+                    updatePlayPauseButton();
+                });
+                
+                navigator.mediaSession.setActionHandler('pause', function() {
+                    pauseAudio();
+                });
+                
+                navigator.mediaSession.setActionHandler('previoustrack', function() {
+                    prevSong();
+                });
+                
+                navigator.mediaSession.setActionHandler('nexttrack', function() {
+                    if (isRadioMode) {
+                        playNextRadioSong();
+                    } else {
+                        nextSong();
+                    }
+                });
+            }
+        }
+
+        function updateMediaSession(songData) {
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: songData.name,
+                    artist: songData.artist,
+                    album: songData.album,
+                    artwork: [
+                        { src: songData.image, sizes: '512x512', type: 'image/jpeg' }
+                    ]
+                });
+            }
+        }
+
         // Показать Action Sheet
         function showActionSheet(songName) {
             currentActionSong = songName;
@@ -1120,7 +1435,6 @@
             const songIndex = userSongs.findIndex(song => (song.name || song) === songName);
             if (songIndex === -1) return;
             
-            // Находим элемент песни в DOM
             const songElements = document.querySelectorAll('.song-item');
             const songElement = Array.from(songElements).find(el => {
                 const menuBtn = el.querySelector('.menu-btn');
@@ -1128,16 +1442,13 @@
             });
             
             if (songElement) {
-                // Добавляем класс для анимации удаления
                 songElement.classList.add('removing');
                 
-                // Удаляем песню из массива после анимации
                 setTimeout(() => {
                     userSongs.splice(songIndex, 1);
                     saveUserLibrary();
                     renderUserLibrary();
                     
-                    // Если удаляемая песня играет, останавливаем воспроизведение
                     if (currentSongIndex === songIndex) {
                         if (currentAudio) {
                             currentAudio.pause();
@@ -1147,7 +1458,6 @@
                     }
                 }, 400);
             } else {
-                // Если элемент не найден, просто удаляем из массива
                 userSongs.splice(songIndex, 1);
                 saveUserLibrary();
                 renderUserLibrary();
@@ -1159,25 +1469,21 @@
             const songData = allSongsMap.get(songName);
             if (!songData) return;
             
-            // Сразу обновляем плеер
             updatePlayer(songData, true);
             showPlayer();
+            updateMediaSession(songData);
             
-            // Останавливаем текущее воспроизведение
             if (currentAudio) {
                 currentAudio.pause();
                 currentAudio = null;
             }
             
-            // Создаем новый аудио элемент
             currentAudio = new Audio(songData.audioUrl);
             currentSongIndex = userSongs.findIndex(song => (song.name || song) === songName);
             
-            // Отключаем ускорение
             currentAudio.playbackRate = 1.0;
             
             currentAudio.addEventListener('canplaythrough', function() {
-                // Когда аудио готово, показываем картинку
                 updatePlayer(songData, false);
                 if (isPlaying) {
                     playAudio();
@@ -1191,10 +1497,13 @@
             });
             
             currentAudio.addEventListener('ended', function() {
-                nextSong();
+                if (isRadioMode) {
+                    playNextRadioSong();
+                } else {
+                    nextSong();
+                }
             });
             
-            // Начинаем воспроизведение
             isPlaying = true;
             updatePlayPauseButton();
             playAudio();
@@ -1217,7 +1526,7 @@
             } else {
                 playerCover.classList.remove('loading');
                 playerCover.style.backgroundImage = `url('${songData.image}')`;
-                playerCover.style.backgroundSize = 'cover'; // Исправляем масштабирование
+                playerCover.style.backgroundSize = 'cover';
                 playerCover.innerHTML = '';
             }
             
@@ -1253,10 +1562,8 @@
         function updatePlayPauseButton() {
             const icon = document.getElementById('playPauseIcon');
             if (isPlaying) {
-                // Иконка паузы
                 icon.innerHTML = '<rect x="4" y="2" width="3" height="12"/><rect x="9" y="2" width="3" height="12"/>';
             } else {
-                // Иконка воспроизведения
                 icon.innerHTML = '<path d="M3 2L13 8L3 14V2Z"/>';
             }
         }
@@ -1332,12 +1639,10 @@
                 progressBar.style.width = `${percent * 100}%`;
             }
             
-            // Обработчики для мыши
             progressContainer.addEventListener('mousedown', startDrag);
             document.addEventListener('mousemove', duringDrag);
             document.addEventListener('mouseup', endDrag);
             
-            // Обработчики для тача
             progressContainer.addEventListener('touchstart', (e) => {
                 startDrag(e.touches[0]);
             });
@@ -1346,7 +1651,6 @@
             });
             document.addEventListener('touchend', endDrag);
             
-            // Клик для быстрой перемотки
             progressContainer.addEventListener('click', (e) => {
                 if (!isDragging) {
                     updateProgressFromEvent(e);
@@ -1358,13 +1662,11 @@
         function openAlbumView(album) {
             currentAlbum = album;
             
-            // Устанавливаем фон и обложку
             document.getElementById('albumBackground').style.backgroundImage = `url('${album.image}')`;
             document.getElementById('albumCoverLarge').style.backgroundImage = `url('${album.image}')`;
             document.getElementById('albumTitleLarge').textContent = album.title;
             document.getElementById('albumArtistLarge').textContent = album.artist;
             
-            // Рендерим песни альбома
             const songsContainer = document.getElementById('albumSongs');
             songsContainer.innerHTML = '';
             
@@ -1389,14 +1691,12 @@
                     </button>
                 `;
                 
-                // Обработчик воспроизведения
                 songElement.addEventListener('click', (e) => {
                     if (!e.target.closest('.add-btn')) {
                         playSong(song.name);
                     }
                 });
                 
-                // Обработчик добавления в медиатеку
                 const addBtn = songElement.querySelector('.add-btn');
                 if (!isInLibrary) {
                     addBtn.addEventListener('click', (e) => {
@@ -1408,7 +1708,6 @@
                 songsContainer.appendChild(songElement);
             });
             
-            // Показываем просмотр альбома
             document.getElementById('albumView').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -1420,7 +1719,6 @@
             userSongs.push(songName);
             saveUserLibrary();
             
-            // Меняем иконку на галочку
             button.innerHTML = `
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
@@ -1428,7 +1726,6 @@
             `;
             button.classList.add('added');
             
-            // Через 1.5 секунды меняем на три точки
             setTimeout(() => {
                 button.innerHTML = `
                     <div class="menu-dots"></div>
@@ -1437,7 +1734,6 @@
                 button.classList.add('menu-btn');
             }, 1500);
             
-            // Обновляем счетчик
             renderUserLibrary();
         }
 
@@ -1477,7 +1773,6 @@
                     </div>
                 `;
                 
-                // Обработчик клика для открытия альбома
                 albumElement.addEventListener('click', () => {
                     openAlbumView(album);
                 });
@@ -1486,7 +1781,13 @@
             });
         }
 
-        // Обработчики событий плеера
+        // Уведомления
+        function showNotification(message, duration = 3000) {
+            // Простая реализация уведомления
+            console.log('Notification:', message);
+        }
+
+        // Обработчики событий
         document.getElementById('playPauseBtn').addEventListener('click', function() {
             if (isPlaying) {
                 pauseAudio();
@@ -1497,20 +1798,24 @@
             }
         });
 
-        document.getElementById('nextBtn').addEventListener('click', nextSong);
+        document.getElementById('nextBtn').addEventListener('click', function() {
+            if (isRadioMode) {
+                playNextRadioSong();
+            } else {
+                nextSong();
+            }
+        });
+
         document.getElementById('prevBtn').addEventListener('click', prevSong);
 
-        // Обработчик закрытия альбома
         document.getElementById('closeAlbumView').addEventListener('click', closeAlbumView);
 
-        // Закрытие альбома по клику на фон
         document.getElementById('albumView').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeAlbumView();
             }
         });
 
-        // Обработчики Action Sheet
         document.getElementById('deleteSongBtn').addEventListener('click', function() {
             if (currentActionSong) {
                 removeSongFromLibrary(currentActionSong);
@@ -1520,17 +1825,17 @@
 
         document.getElementById('cancelActionBtn').addEventListener('click', hideActionSheet);
 
-        // Закрытие Action Sheet по клику на фон
         document.getElementById('actionSheet').addEventListener('click', function(e) {
             if (e.target === this) {
                 hideActionSheet();
             }
         });
 
-        // Инициализация прогресс-бара
-        setupProgressBar();
+        // Запуск радио
+        document.getElementById('radioCard').addEventListener('click', startRadioMode);
 
-        // Загрузка при старте
+        // Инициализация
+        setupProgressBar();
         window.addEventListener('load', loadSongs);
     </script>
 </body>
